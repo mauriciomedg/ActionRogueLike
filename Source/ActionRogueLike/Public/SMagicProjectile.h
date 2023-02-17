@@ -19,6 +19,8 @@ public:
 	// Sets default values for this actor's properties
 	ASMagicProjectile();
 
+	virtual void PostInitializeComponents() override;
+
 protected:
 
 	UPROPERTY(VisibleAnywhere)
@@ -32,6 +34,10 @@ protected:
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+private:
+	UFUNCTION()
+	void OnCompHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 public:	
 	// Called every frame

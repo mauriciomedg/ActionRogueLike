@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "PhysicsEngine/RadialForceComponent.h"
 
 // Sets default values
 ASMagicProjectile::ASMagicProjectile()
@@ -31,6 +32,26 @@ ASMagicProjectile::ASMagicProjectile()
 	MovementComp->InitialSpeed = 1000.0f;
 	MovementComp->bRotationFollowsVelocity = true;
 	MovementComp->bInitialVelocityInLocalSpace = true;
+}
+
+void ASMagicProjectile::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	
+
+	SphereComp->OnComponentHit.AddDynamic(this, &ASMagicProjectile::OnCompHit);
+}
+
+void ASMagicProjectile::OnCompHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	URadialForceComponent* ActionComp = Cast<URadialForceComponent>(OtherActor->GetComponentByClass(URadialForceComponent::StaticClass()));
+
+	if (ActionComp != nullptr)
+	{
+		ActionComp->FireImpulse();
+	}
+	//RadialForceComp->FireImpulse();
 }
 
 // Called when the game starts or when spawned
