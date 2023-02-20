@@ -3,6 +3,7 @@
 
 #include "SInteractionComponent.h"
 #include "SGameplayInterface.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values for this component's properties
 USInteractionComponent::USInteractionComponent()
@@ -48,7 +49,7 @@ void USInteractionComponent::PrimaryInteract()
 	FVector End(EyeLocation + (EyeRotation.Vector() * 1000.0f));
 
 	FHitResult Hit;
-	GetWorld()->LineTraceSingleByObjectType(Hit, EyeLocation, End, ObjectQueryParams);
+	bool bBlocking = GetWorld()->LineTraceSingleByObjectType(Hit, EyeLocation, End, ObjectQueryParams);
 
 	AActor* HitActor = Hit.GetActor();
 
@@ -61,4 +62,7 @@ void USInteractionComponent::PrimaryInteract()
 			ISGameplayInterface::Execute_Interact(HitActor, MyPawn);
 		}
 	}
+
+	FColor LineColor = bBlocking ? FColor::Green : FColor::Red;
+	DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 2.0f);
 }
