@@ -91,6 +91,16 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void ASCharacter::PrimaryAttack()
 {
+	PlayAnimMontage(AttackAnim);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimeEnlapsed, 0.2);
+
+	// This is declared when the character die
+	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
+}
+
+void ASCharacter::PrimaryAttack_TimeEnlapsed()
+{
 	// get socket (marked added in the bones of the skeleton mesh)
 	FVector HandLocation(GetMesh()->GetSocketLocation("Muzzle_01"));
 	FTransform SpawnTM(FTransform(GetControlRotation(), HandLocation));
@@ -100,4 +110,3 @@ void ASCharacter::PrimaryAttack()
 
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
 }
-
