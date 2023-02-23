@@ -37,22 +37,21 @@ ASMagicProjectile::ASMagicProjectile()
 void ASMagicProjectile::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
 	
 
-	SphereComp->OnComponentHit.AddDynamic(this, &ASMagicProjectile::OnCompHit);
+	//SphereComp->OnComponentHit.AddDynamic(this, &ASMagicProjectile::OnCompHit);
 }
 
-void ASMagicProjectile::OnCompHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-	URadialForceComponent* ActionComp = Cast<URadialForceComponent>(OtherActor->GetComponentByClass(URadialForceComponent::StaticClass()));
-
-	if (ActionComp != nullptr)
-	{
-		ActionComp->FireImpulse();
-	}
-	//RadialForceComp->FireImpulse();
-}
+//void ASMagicProjectile::OnCompHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+//{
+//	URadialForceComponent* ActionComp = Cast<URadialForceComponent>(OtherActor->GetComponentByClass(URadialForceComponent::StaticClass()));
+//
+//	if (ActionComp != nullptr)
+//	{
+//		ActionComp->FireImpulse();
+//	}
+//	//RadialForceComp->FireImpulse();
+//}
 
 // Called when the game starts or when spawned
 void ASMagicProjectile::BeginPlay()
