@@ -101,13 +101,16 @@ void ASCharacter::PrimaryAttack()
 
 void ASCharacter::PrimaryAttack_TimeEnlapsed()
 {
-	// get socket (marked added in the bones of the skeleton mesh)
-	FVector HandLocation(GetMesh()->GetSocketLocation("Muzzle_01"));
-	FTransform SpawnTM(FTransform(GetControlRotation(), HandLocation));
+	if (ensure(ProjectileClass)) // ensureAlways() that triggers everytime. In package game this is removed.
+	{
+		// get socket (marked added in the bones of the skeleton mesh)
+		FVector HandLocation(GetMesh()->GetSocketLocation("Muzzle_01"));
+		FTransform SpawnTM(FTransform(GetControlRotation(), HandLocation));
 
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	SpawnParams.Instigator = this;
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		SpawnParams.Instigator = this;
 
-	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+	}
 }
