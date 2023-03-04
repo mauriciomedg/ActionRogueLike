@@ -15,7 +15,19 @@ ASTeleportDashProjectile::ASTeleportDashProjectile()
 void ASTeleportDashProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	GetWorldTimerManager().SetTimer(TimerHandle_Teleport, this, &ASTeleportDashProjectile::TeleportInstigator_TimeEnlapsed, 2);
+}
+
+void ASTeleportDashProjectile::TeleportInstigator_TimeEnlapsed()
+{
+	FVector pos = GetActorLocation();
+	FRotator rot = GetActorRotation();
+
+	GetInstigator()->TeleportTo(pos, rot);
+	GetWorldTimerManager().ClearTimer(TimerHandle_Teleport);
+
+	Destroy();
 }
 
 // Called every frame

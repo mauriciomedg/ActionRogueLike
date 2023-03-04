@@ -88,6 +88,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttackMagicProjectile);
 	PlayerInputComponent->BindAction("PrimaryAttackBlackHole", IE_Pressed, this, &ASCharacter::PrimaryAttackBlackHole);
+	PlayerInputComponent->BindAction("PrimaryAttackTeleport", IE_Pressed, this, &ASCharacter::PrimaryAttackTeleport);
 }
 
 void ASCharacter::PrimaryAttackMagicProjectile()
@@ -105,6 +106,16 @@ void ASCharacter::PrimaryAttackBlackHole()
 	PlayAnimMontage(AttackAnim);
 
 	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttackBlackHole_TimeEnlapsed, 0.2);
+
+	// This is declared when the character die
+	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
+}
+
+void ASCharacter::PrimaryAttackTeleport()
+{
+	PlayAnimMontage(AttackAnim);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttackTeleport_TimeEnlapsed, 0.2);
 
 	// This is declared when the character die
 	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
@@ -167,3 +178,9 @@ void ASCharacter::PrimaryAttackBlackHole_TimeEnlapsed()
 {
 	PrimaryAttack_TimeEnlapsed(ProjectileBlackHoleClass);
 }
+
+void ASCharacter::PrimaryAttackTeleport_TimeEnlapsed()
+{
+	PrimaryAttack_TimeEnlapsed(ProjectileTeleport);
+}
+

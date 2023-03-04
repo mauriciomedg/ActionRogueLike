@@ -19,6 +19,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void TeleportInstigator_TimeEnlapsed();
+
+protected:
+	FTimerHandle TimerHandle_Teleport;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

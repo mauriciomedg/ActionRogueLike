@@ -25,6 +25,9 @@ protected:
 	TSubclassOf<AActor> ProjectileBlackHoleClass;
 
 	UPROPERTY(EditAnywhere, Category = "Atack")
+	TSubclassOf<AActor> ProjectileTeleport;
+
+	UPROPERTY(EditAnywhere, Category = "Atack")
 	UAnimMontage* AttackAnim;
 
 	FTimerHandle TimerHandle_PrimaryAttack;
@@ -50,17 +53,20 @@ protected:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 
+	// Interaction
 	void PrimaryInteract();
+
+	// Attack
 	void PrimaryAttackMagicProjectile();
 	void PrimaryAttackBlackHole();
+	void PrimaryAttackTeleport();
 
 	void PrimaryAttack_TimeEnlapsed(TSubclassOf<AActor> ProjectileClass);
 
 	void PrimaryAttackMagicP_TimeEnlapsed();
 	void PrimaryAttackBlackHole_TimeEnlapsed();
-
+	void PrimaryAttackTeleport_TimeEnlapsed();
 	
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
