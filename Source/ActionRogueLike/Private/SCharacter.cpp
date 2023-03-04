@@ -87,6 +87,8 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttack);
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &ASCharacter::PrimaryInteract);
 
+	PlayerInputComponent->BindAction("PrimaryAttackBlackHole", IE_Pressed, this, &ASCharacter::PrimaryAttackBlackHole);
+
 }
 
 void ASCharacter::PrimaryAttack()
@@ -97,6 +99,31 @@ void ASCharacter::PrimaryAttack()
 
 	// This is declared when the character die
 	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
+}
+
+void ASCharacter::PrimaryAttackBlackHole()
+{
+	PlayAnimMontage(AttackAnim);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttackBlackHole_TimeEnlapsed, 0.2);
+
+	// This is declared when the character die
+	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
+}
+
+void ASCharacter::PrimaryAttackBlackHole_TimeEnlapsed()
+{
+	if (ensure(ProjectileBlackHoleClass)) // ensureAlways() that triggers everytime. In package game this is removed.
+	{
+		FVector HandLocation(GetMesh()->GetSocketLocation("Muzzle_01"));
+		FTransform SpawnTM(FTransform(GetControlRotation(), HandLocation));
+
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		SpawnParams.Instigator = this;
+
+		GetWorld()->SpawnActor<AActor>(ProjectileBlackHoleClass, SpawnTM, SpawnParams);
+	}
 }
 
 void ASCharacter::PrimaryAttack_TimeEnlapsed()

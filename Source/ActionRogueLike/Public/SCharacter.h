@@ -22,6 +22,9 @@ protected:
 	TSubclassOf<AActor> ProjectileClass;
 
 	UPROPERTY(EditAnywhere, Category = "Atack")
+	TSubclassOf<AActor> ProjectileBlackHoleClass;
+
+	UPROPERTY(EditAnywhere, Category = "Atack")
 	UAnimMontage* AttackAnim;
 
 	FTimerHandle TimerHandle_PrimaryAttack;
@@ -48,8 +51,13 @@ protected:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void PrimaryAttack();
-	void PrimaryInteract();
 	void PrimaryAttack_TimeEnlapsed();
+	void PrimaryInteract();
+
+	void PrimaryAttackBlackHole();
+	void PrimaryAttackBlackHole_TimeEnlapsed();
+
+	
 
 public:	
 	// Called every frame
