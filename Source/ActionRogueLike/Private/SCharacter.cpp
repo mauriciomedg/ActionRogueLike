@@ -84,18 +84,17 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
-	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttack);
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &ASCharacter::PrimaryInteract);
 
+	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttackMagicProjectile);
 	PlayerInputComponent->BindAction("PrimaryAttackBlackHole", IE_Pressed, this, &ASCharacter::PrimaryAttackBlackHole);
-
 }
 
-void ASCharacter::PrimaryAttack()
+void ASCharacter::PrimaryAttackMagicProjectile()
 {
 	PlayAnimMontage(AttackAnim);
 
-	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimeEnlapsed, 0.2);
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttackMagicP_TimeEnlapsed, 0.2);
 
 	// This is declared when the character die
 	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
@@ -111,22 +110,7 @@ void ASCharacter::PrimaryAttackBlackHole()
 	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
 }
 
-void ASCharacter::PrimaryAttackBlackHole_TimeEnlapsed()
-{
-	if (ensure(ProjectileBlackHoleClass)) // ensureAlways() that triggers everytime. In package game this is removed.
-	{
-		FVector HandLocation(GetMesh()->GetSocketLocation("Muzzle_01"));
-		FTransform SpawnTM(FTransform(GetControlRotation(), HandLocation));
-
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		SpawnParams.Instigator = this;
-
-		GetWorld()->SpawnActor<AActor>(ProjectileBlackHoleClass, SpawnTM, SpawnParams);
-	}
-}
-
-void ASCharacter::PrimaryAttack_TimeEnlapsed()
+void ASCharacter::PrimaryAttack_TimeEnlapsed(TSubclassOf<AActor> ProjectileClass)
 {
 	if (ensure(ProjectileClass)) // ensureAlways() that triggers everytime. In package game this is removed.
 	{
@@ -140,7 +124,7 @@ void ASCharacter::PrimaryAttack_TimeEnlapsed()
 		FRotator EyeRotation;
 
 		// get info from camera view 
-		FMinimalViewInfo ViewInfo; 
+		FMinimalViewInfo ViewInfo;
 		CameraComp->GetCameraView(0.0f, ViewInfo);
 		EyeLocation = ViewInfo.Location;
 		EyeRotation = ViewInfo.Rotation;
@@ -163,7 +147,7 @@ void ASCharacter::PrimaryAttack_TimeEnlapsed()
 			// Spawn from here for precision
 			FRotator NewRotation = (Hit.Location - HandLocation).Rotation();
 			SpawnTM = FTransform(NewRotation, HandLocation);
-			
+
 		}
 
 		FActorSpawnParameters SpawnParams;
@@ -172,4 +156,14 @@ void ASCharacter::PrimaryAttack_TimeEnlapsed()
 
 		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
 	}
+}
+
+void ASCharacter::PrimaryAttackMagicP_TimeEnlapsed()
+{
+	PrimaryAttack_TimeEnlapsed(ProjectileMagicClass);
+}
+
+void ASCharacter::PrimaryAttackBlackHole_TimeEnlapsed()
+{
+	PrimaryAttack_TimeEnlapsed(ProjectileBlackHoleClass);
 }
