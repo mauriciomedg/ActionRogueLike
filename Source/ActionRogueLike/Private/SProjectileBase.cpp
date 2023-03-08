@@ -22,6 +22,8 @@ ASProjectileBase::ASProjectileBase()
 	/////
 
 	SphereComp->SetCollisionProfileName("Projectile");
+	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &ASProjectileBase::OnActorOverlap);
+
 	RootComponent = SphereComp;
 
 	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
@@ -31,6 +33,11 @@ ASProjectileBase::ASProjectileBase()
 	//MovementComp->InitialSpeed = 1000.0f;
 	//MovementComp->bRotationFollowsVelocity = true;
 	//MovementComp->bInitialVelocityInLocalSpace = true;
+}
+
+void ASProjectileBase::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	
 }
 
 // Called when the game starts or when spawned
