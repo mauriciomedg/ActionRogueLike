@@ -29,6 +29,13 @@ ASCharacter::ASCharacter()
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
 }
 
+void ASCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	AttributeComp->OnHealthChange.AddDynamic(this, &ASCharacter::OnHealthChanged);
+}
+
 // Called when the game starts or when spawned
 void ASCharacter::BeginPlay()
 {
@@ -169,6 +176,16 @@ void ASCharacter::PrimaryAttack_TimeEnlapsed(TSubclassOf<AActor> ProjectileClass
 		SpawnParams.Instigator = this;
 
 		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
+	}
+}
+
+void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwingComp, float NewHealth, float Delta)
+{
+	if (NewHealth <= 0.0f && Delta < 0.0f)
+	{
+		APlayerController* PlayerCtr = Cast<APlayerController>(GetController());
+
+		DisableInput(PlayerCtr);
 	}
 }
 
