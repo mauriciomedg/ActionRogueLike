@@ -20,10 +20,7 @@ public:
 	ASProjectileBase();
 
 protected:
-
-	UFUNCTION()
-	virtual void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
+		
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	USphereComponent* SphereComp;
 
@@ -33,9 +30,19 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	UParticleSystemComponent* EffectComp;
 
+	UFUNCTION()
+	virtual void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	// BlueprintNativeEvent - C++ base implementation, can be expanded in Blueprints
+	// BlueprintCallable to allow child classes to trigger explosions
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void Explode();
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void PostInitializeComponents() override;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

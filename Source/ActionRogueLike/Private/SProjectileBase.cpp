@@ -37,7 +37,17 @@ ASProjectileBase::ASProjectileBase()
 
 void ASProjectileBase::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	
+	Explode();
+}
+
+void ASProjectileBase::Explode_Implementation()
+{
+	if (ensure(!IsPendingKill()))
+	{
+		//UGameplayStatics::SpawnEmitterAtLocation(this, ImpactVFX, GetActorLocation(), GetActorRotation());
+
+		Destroy();
+	}
 }
 
 // Called when the game starts or when spawned
@@ -45,6 +55,11 @@ void ASProjectileBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void ASProjectileBase::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
 }
 
 // Called every frame
