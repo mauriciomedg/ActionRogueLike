@@ -135,7 +135,13 @@ void ASCharacter::PrimaryAttack_TimeEnlapsed(TSubclassOf<AActor> ProjectileClass
 {
 	if (ensure(ProjectileClass)) // ensureAlways() that triggers everytime. In package game this is removed.
 	{
-		//////////////////////////////////////////////////////
+		// get socket (marked added in the bones of the skeleton mesh)
+		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+		SpawnParams.Instigator = this;
+
 		FCollisionObjectQueryParams ObjectQueryParams;
 		ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
 		ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
@@ -151,30 +157,37 @@ void ASCharacter::PrimaryAttack_TimeEnlapsed(TSubclassOf<AActor> ProjectileClass
 		EyeRotation = ViewInfo.Rotation;
 		//
 
+		FCollisionShape Shape;
+		Shape.SetSphere(20.0f);
+
+		FCollisionQueryParams Params;
+		Params.AddIgnoredActor(this);
+
 		// Ray trace from that view
-		FVector End(EyeLocation + (EyeRotation.Vector() * 10000.0f));
+		FVector End(EyeLocation + (EyeRotation.Vector() * 5000.0f));
+		//FVector End = CameraComp->GetComponentLocation() + (GetControlRotation().Vector() * 5000);
 
 		FHitResult Hit;
-		bool bBlocking = GetWorld()->LineTraceSingleByObjectType(Hit, EyeLocation, End, ObjectQueryParams);
 
-		// get socket (marked added in the bones of the skeleton mesh)
-		FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
-		FTransform SpawnTM = FTransform(GetControlRotation(), HandLocation);
-
-		if (bBlocking)
+		if (GetWorld()->SweepSingleByObjectType(Hit, EyeLocation, End, FQuat::Identity, ObjectQueryParams, Shape, Params))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Block Other Actor %s, line trace from camera, at game time %f"), *GetNameSafe(Hit.GetActor()), GetWorld()->TimeSeconds);
-
-			// Spawn from here for precision
-			FRotator NewRotation = (Hit.Location - HandLocation).Rotation();
-			SpawnTM = FTransform(NewRotation, HandLocation);
-
+			End = Hit.ImpactPoint;
 		}
 
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		SpawnParams.Instigator = this;
+		FRotator ProjRotation = FRotationMatrix::MakeFromX(End - HandLocation).Rotator();
 
+		FTransform SpawnTM = FTransform(ProjRotation, HandLocation);
+
+		//if (bBlocking)
+		//{
+		//	UE_LOG(LogTemp, Warning, TEXT("Block Other Actor %s, line trace from camera, at game time %f"), *GetNameSafe(Hit.GetActor()), GetWorld()->TimeSeconds);
+		//
+		//	// Spawn from here for precision
+		//	FRotator NewRotation = (Hit.Location - HandLocation).Rotation();
+		//	SpawnTM = FTransform(NewRotation, HandLocation);
+		//
+		//}
+		
 		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
 	}
 }
