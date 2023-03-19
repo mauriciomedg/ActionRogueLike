@@ -6,6 +6,7 @@
 //#include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "SAttributeComponent.h"
+#include "Components/SphereComponent.h"
 //#include "Particles/ParticleSystemComponent.h"
 //#include "PhysicsEngine/RadialForceComponent.h"
 
