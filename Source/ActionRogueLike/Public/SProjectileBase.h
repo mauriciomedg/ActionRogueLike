@@ -20,7 +20,10 @@ public:
 	ASProjectileBase();
 
 protected:
-		
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effect")
+	UParticleSystem* ImpactVFX;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	USphereComponent* SphereComp;
 
