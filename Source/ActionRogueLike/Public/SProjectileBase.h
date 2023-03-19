@@ -31,8 +31,8 @@ protected:
 	UParticleSystemComponent* EffectComp;
 
 	UFUNCTION()
-	virtual void OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
+	virtual void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	
 	// BlueprintNativeEvent - C++ base implementation, can be expanded in Blueprints
 	// BlueprintCallable to allow child classes to trigger explosions
 
