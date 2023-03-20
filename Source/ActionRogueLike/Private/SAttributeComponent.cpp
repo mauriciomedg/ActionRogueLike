@@ -6,7 +6,7 @@
 // Sets default values for this component's properties
 USAttributeComponent::USAttributeComponent()
 {
-	
+	Health = HealthMax;
 }
 
 bool USAttributeComponent::IsAlive() const
@@ -17,6 +17,8 @@ bool USAttributeComponent::IsAlive() const
 bool USAttributeComponent::ApplyHealthChange(float Delta)
 {
 	Health += Delta;
+
+	Health = FMath::Min(FMath::Max(Health, 0.0f), HealthMax);
 
 	OnHealthChange.Broadcast(nullptr, this, Health, Delta);
 
