@@ -16,12 +16,14 @@ bool USAttributeComponent::IsAlive() const
 
 bool USAttributeComponent::ApplyHealthChange(float Delta)
 {
+	float CurrentHealt = Health;
+
 	Health += Delta;
 
 	Health = FMath::Min(FMath::Max(Health, 0.0f), HealthMax);
 
 	OnHealthChange.Broadcast(nullptr, this, Health, Delta);
 
-	return true;
+	return Health != CurrentHealt;
 }
 
