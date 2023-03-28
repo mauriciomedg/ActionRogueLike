@@ -2,8 +2,6 @@
 
 
 #include "AI/SAIController.h"
-
-#include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 void ASAIController::BeginPlay()
@@ -12,12 +10,14 @@ void ASAIController::BeginPlay()
 
 	RunBehaviorTree(BehaviorTree);
 
-	// we pass this as to tell the context, 0 is the player index
-	APawn* MyPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+	// We replace this by the UPawnSensingComponent defined in the ASAICharacter
 
-	if (MyPawn)
-	{
-		//GetBlackboardComponent()->SetValueAsVector("MoveToLocation", MyPawn->GetActorLocation());
-		GetBlackboardComponent()->SetValueAsObject("TargetActor", MyPawn);
-	}
+	//// we pass this as to tell the context, 0 is the player index
+	//APawn* MyPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+	//
+	//if (MyPawn)
+	//{
+	//	//GetBlackboardComponent()->SetValueAsVector("MoveToLocation", MyPawn->GetActorLocation());
+	//	GetBlackboardComponent()->SetValueAsObject("TargetActor", MyPawn);
+	//}
 }
