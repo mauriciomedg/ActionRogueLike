@@ -19,6 +19,10 @@ class ACTIONROGUELIKE_API ASCharacter : public ACharacter
 
 protected:
 
+	// VisibleAnywhere = read only, still useful to view in the editor and enforce a convention.
+	UPROPERTY(VisibleAnywhere, Category = "Effect")
+	FName HandSocketName;
+	
 	UPROPERTY(EditAnywhere, Category = "Atack")
 	TSubclassOf<AActor> ProjectileMagicClass;
 

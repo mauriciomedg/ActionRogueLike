@@ -13,12 +13,18 @@ ASHealthPotion::ASHealthPotion()
 
 	BottleMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BottleMesh"));
 	RootComponent = BottleMesh;
+
+	// we can do a
+	//BottleMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	// and add a sphere to handle the overlap.
 }
 
 void ASHealthPotion::EnableHealthPotion()
 {
-	BottleMesh->SetVisibility(true);
-	BottleMesh->SetCollisionProfileName("BlockAllDynamic");
+	//BottleMesh->SetVisibility(true);
+	//BottleMesh->SetCollisionProfileName("BlockAllDynamic");
+	SetActorEnableCollision(true);
+	RootComponent->SetVisibility(true, true);
 }
 
 void ASHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
@@ -33,8 +39,11 @@ void ASHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 			{
 				if (ensure(BottleMesh))
 				{
-					BottleMesh->SetVisibility(false);
-					BottleMesh->SetCollisionProfileName("NoCollision");
+					//BottleMesh->SetVisibility(false);
+					//BottleMesh->SetCollisionProfileName("NoCollision");
+
+					SetActorEnableCollision(false);
+					RootComponent->SetVisibility(false, true);
 				}
 
 				FTimerHandle TimerHandel_EnableHealthPotion;
