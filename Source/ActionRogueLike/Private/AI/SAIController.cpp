@@ -8,8 +8,11 @@ void ASAIController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	RunBehaviorTree(BehaviorTree);
-
+	if (ensureMsgf(BehaviorTree, TEXT("Behavior Tree is null!, Please assign BehaviorTree in your AI Controller")))
+	{
+		RunBehaviorTree(BehaviorTree);
+	}
+		
 	// We replace this by the UPawnSensingComponent defined in the ASAICharacter
 
 	//// we pass this as to tell the context, 0 is the player index
