@@ -28,6 +28,12 @@ protected:
 	
 public:
 
+	UFUNCTION()
+	float GetMaxHealth() const;
+
+	UFUNCTION()
+	float GetHealth() const;
+
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive() const;
 

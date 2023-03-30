@@ -9,6 +9,16 @@ USAttributeComponent::USAttributeComponent()
 	Health = HealthMax;
 }
 
+float USAttributeComponent::GetMaxHealth() const
+{
+	return HealthMax;
+}
+
+float USAttributeComponent::GetHealth() const
+{
+	return Health;
+}
+
 bool USAttributeComponent::IsAlive() const
 {
 	return Health > 0.0f;
