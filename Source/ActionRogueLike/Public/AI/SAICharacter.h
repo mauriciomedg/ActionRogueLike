@@ -26,10 +26,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USAttributeComponent* AttributeComp;
 
-	// temporal
-	UPROPERTY(EditAnywhere, Category = "Healt")
-	float Health;
-
 	UFUNCTION()
 	void OnPawnSeen(APawn* Pawn);
 	

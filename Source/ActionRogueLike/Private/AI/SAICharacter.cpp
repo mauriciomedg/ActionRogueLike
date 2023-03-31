@@ -23,7 +23,6 @@ void ASAICharacter::PostInitializeComponents()
 	
 	AttributeComp->OnHealthChange.AddDynamic(this, &ASAICharacter::OnHealthChanged);
 
-	Health = AttributeComp->GetHealth();
 }
 
 float ASAICharacter::GetHealth()
@@ -40,8 +39,6 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 {
 	if (Delta < 0.0f)
 	{
-		Health = NewHealth;
-
 		AAIController* AIC = Cast<AAIController>(GetController());
 
 		if (AIC)
