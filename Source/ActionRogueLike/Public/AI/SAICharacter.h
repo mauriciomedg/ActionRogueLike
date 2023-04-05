@@ -20,6 +20,8 @@ public:
 	float GetHealth();
 protected:
 
+	void SetTargetActor(AActor* NewTarget);
+
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UPawnSensingComponent* PawSensingComp;
 

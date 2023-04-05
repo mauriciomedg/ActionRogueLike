@@ -24,7 +24,7 @@ EBTNodeResult::Type USBTTask_HealBack::ExecuteTask(UBehaviorTreeComponent& Owner
 
 		if (AttributeComp)
 		{
-			if (AttributeComp->ApplyHealthChange(100.0f))
+			if (AttributeComp->ApplyHealthChange(nullptr, 100.0f))
 			{
 				return EBTNodeResult::Succeeded;
 			}

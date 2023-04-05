@@ -24,7 +24,7 @@ bool USAttributeComponent::IsAlive() const
 	return Health > 0.0f;
 }
 
-bool USAttributeComponent::ApplyHealthChange(float Delta)
+bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delta)
 {
 	float CurrentHealt = Health;
 
@@ -32,7 +32,7 @@ bool USAttributeComponent::ApplyHealthChange(float Delta)
 
 	Health = FMath::Min(FMath::Max(Health, 0.0f), HealthMax);
 
-	OnHealthChange.Broadcast(nullptr, this, Health, Delta);
+	OnHealthChange.Broadcast(InstigatorActor, this, Health, Delta);
 
 	return Health != CurrentHealt;
 }

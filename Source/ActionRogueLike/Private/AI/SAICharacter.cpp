@@ -50,6 +50,11 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 			return;
 		}
 
+		if (InstigatorActor) // we dont check if there is the player or the bot that takes damages
+		{
+			SetTargetActor(InstigatorActor);
+		}
+
 		if (NewHealth > 0)
 		{
 			UBlackboardComponent* BBC = AIC->GetBlackboardComponent();
@@ -71,18 +76,20 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 	}
 }
 
-void ASAICharacter::OnPawnSeen(APawn* Pawn)
+void ASAICharacter::SetTargetActor(AActor* NewTarget)
 {
 	AAIController* AIC = Cast<AAIController>(GetController());
 
 	if (AIC)
 	{
-		UBlackboardComponent* BBC = AIC->GetBlackboardComponent();
-
-		BBC->SetValueAsObject("TargetActor", Pawn);
-
-		DrawDebugString(GetWorld(), GetActorLocation(), "PLAYER_SPOTTED", nullptr, FColor::White, 4.0f, true);
+		AIC->GetBlackboardComponent()->SetValueAsObject("TargetActor", NewTarget);
 	}
+}
+
+void ASAICharacter::OnPawnSeen(APawn* Pawn)
+{
+	SetTargetActor(Pawn);
+	DrawDebugString(GetWorld(), GetActorLocation(), "PLAYER_SPOTTED", nullptr, FColor::White, 4.0f, true);
 }
 
 void ASAICharacter::BeginPlay()

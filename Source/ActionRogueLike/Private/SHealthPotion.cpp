@@ -35,7 +35,7 @@ void ASHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 
 		if (AttributeComp)
 		{
-			if (AttributeComp->ApplyHealthChange(100.0f))
+			if (AttributeComp->ApplyHealthChange(this, 100.0f))
 			{
 				if (ensure(BottleMesh))
 				{
