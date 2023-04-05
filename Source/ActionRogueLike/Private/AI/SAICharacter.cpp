@@ -4,6 +4,7 @@
 #include "AI/SAICharacter.h"
 #include "Perception/PawnSensingComponent.h"
 #include "AIController.h"
+#include "BrainComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "DrawDebugHelpers.h"
 #include "SAttributeComponent.h"
@@ -44,10 +45,28 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 	{
 		AAIController* AIC = Cast<AAIController>(GetController());
 
-		if (AIC)
+		if (!AIC)
+		{
+			return;
+		}
+
+		if (NewHealth > 0)
 		{
 			UBlackboardComponent* BBC = AIC->GetBlackboardComponent();
 			BBC->SetValueAsFloat("Health", NewHealth);
+		}
+		else
+		{
+			// bot dead //
+			// stop BT
+			AIC->GetBrainComponent()->StopLogic("Killed");
+
+			// Ragdoll
+			GetMesh()->SetAllBodiesSimulatePhysics(true);
+			GetMesh()->SetCollisionProfileName("Ragdoll");
+
+			// set lifespan. This gives time to play ragdoll before desapear 
+			SetLifeSpan(10.0f); 
 		}
 	}
 }
