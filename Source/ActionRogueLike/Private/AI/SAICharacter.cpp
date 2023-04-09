@@ -17,6 +17,8 @@ ASAICharacter::ASAICharacter()
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
+
+	TimeToHitParamName = "TimeToHit";
 }
 
 void ASAICharacter::PostInitializeComponents()
@@ -49,11 +51,13 @@ void ASAICharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponen
 		{
 			return;
 		}
-
+		
 		if (InstigatorActor) // we dont check if there is the player or the bot that takes damages
 		{
 			SetTargetActor(InstigatorActor);
 		}
+
+		GetMesh()->SetScalarParameterValueOnMaterials(TimeToHitParamName, GetWorld()->TimeSeconds);
 
 		if (NewHealth > 0)
 		{

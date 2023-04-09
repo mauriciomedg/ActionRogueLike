@@ -20,6 +20,9 @@ public:
 	float GetHealth();
 protected:
 
+	UPROPERTY(VisibleAnywhere, Category = "Effect")
+	FName TimeToHitParamName;
+
 	void SetTargetActor(AActor* NewTarget);
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
