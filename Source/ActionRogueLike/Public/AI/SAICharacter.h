@@ -7,6 +7,8 @@
 #include "SAICharacter.generated.h"
 
 class UPawnSensingComponent;
+class UUserWidget;
+class USWorldUserWidget;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASAICharacter : public ACharacter
@@ -19,6 +21,11 @@ public:
 
 	float GetHealth();
 protected:
+
+	USWorldUserWidget* ActiveHealthBar;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> HealthBarUserClass;
 
 	UPROPERTY(VisibleAnywhere, Category = "Effect")
 	FName TimeToHitParamName;
