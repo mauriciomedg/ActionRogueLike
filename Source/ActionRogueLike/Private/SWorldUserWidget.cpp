@@ -22,11 +22,11 @@ void USWorldUserWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 		return;
 	}
 
-	if (UGameplayStatics::ProjectWorldToScreen(GetOwningPlayer(), AttachedActor->GetActorLocation(), ScreenPosition))
+	if (UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(GetOwningPlayer(), AttachedActor->GetActorLocation() + WorldOffset, ScreenPosition, true))
 	{
-		float Scale = UWidgetLayoutLibrary::GetViewportScale(this);
+		//float Scale = UWidgetLayoutLibrary::GetViewportScale(this);
 
-		ScreenPosition /= Scale;
+		//ScreenPosition /= Scale;
 
 		if (ParentSizeBox)
 		{
