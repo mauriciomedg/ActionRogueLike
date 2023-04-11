@@ -46,4 +46,7 @@ public:
 
 	//Game mode it is responsable to call the begin play on the all actor in the world
 	virtual void StartPlay() override;
+
+	UFUNCTION(Exec)
+	void KillAll();
 };

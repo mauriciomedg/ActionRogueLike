@@ -9,6 +9,11 @@ USAttributeComponent::USAttributeComponent()
 	Health = HealthMax;
 }
 
+bool USAttributeComponent::Kill(AActor* InstigatorActor)
+{
+	return ApplyHealthChange(InstigatorActor, -GetMaxHealth());
+}
+
 float USAttributeComponent::GetMaxHealth() const
 {
 	return HealthMax;
@@ -26,6 +31,11 @@ bool USAttributeComponent::IsAlive() const
 
 bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delta)
 {
+	if (!GetOwner()->CanBeDamaged()) // can be damage could be set in the console as God
+	{
+		return false;
+	}
+
 	float CurrentHealt = Health;
 
 	Health += Delta;

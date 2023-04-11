@@ -16,6 +16,9 @@ class ACTIONROGUELIKE_API USAttributeComponent : public UActorComponent
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	bool Kill(AActor* InstigatorActor);
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	static USAttributeComponent* GetAttributes(AActor* FromActor);
 
 	// "meta" display in the editor

@@ -88,4 +88,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	//Works automatically just in the player controller, the character we are playing with, game mode, cheat manager, 
+	UFUNCTION(Exec)
+	void HealSelf(float Amount = 100.0f);
 };

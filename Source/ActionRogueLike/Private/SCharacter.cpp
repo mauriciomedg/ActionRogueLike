@@ -224,3 +224,8 @@ void ASCharacter::PrimaryAttackTeleport_TimeEnlapsed()
 	PrimaryAttack_TimeEnlapsed(ProjectileTeleport);
 }
 
+void ASCharacter::HealSelf(float Amount /* - 100 */)
+{
+	AttributeComp->ApplyHealthChange(this, Amount);
+}
+
