@@ -40,9 +40,14 @@ protected:
 	UFUNCTION()
 	void OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
 
+	UFUNCTION()
+	void RespawnPlayerElapse(AController* Controller); // we pass the controler since the character just die, it may be deleted.
+
 public:
 
 	ASGameModeBase();
+
+	virtual void OnActorKilled(AActor* VictimActor, AActor* Killer);
 
 	//Game mode it is responsable to call the begin play on the all actor in the world
 	virtual void StartPlay() override;

@@ -7,6 +7,7 @@
 #include "SAttributeComponent.h"
 #include "EngineUtils.h" // for TActorIterator<>
 #include "DrawDebugHelpers.h"
+#include "SCharacter.h"
 
 ASGameModeBase::ASGameModeBase()
 {
@@ -91,5 +92,35 @@ void ASGameModeBase::KillAll()
 		{
 			AttributeComp->Kill(this); //@fixme: pass in player? for kill credit
 		}
+	}
+}
+
+void ASGameModeBase::RespawnPlayerElapse(AController* Controller)
+{
+	if (ensure(Controller))
+	{
+		Controller->UnPossess();
+
+		RestartPlayer(Controller);
+	}
+}
+
+void ASGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
+{
+	ASCharacter* Player = Cast<ASCharacter>(VictimActor);
+
+	if (Player)
+	{
+		//It is important to use this handle as a local variable not to be override by another player that an die.
+		//If it is reuse the SetTimer will be override the existing timer.
+		FTimerHandle TimerHandle_RespawnDelay;
+
+		FTimerDelegate Delegate;
+		Delegate.BindUFunction(this, "RespawnPlayerElapse", Player->GetController());
+
+		float RespawnDelay = 2.0f;
+		GetWorldTimerManager().SetTimer(TimerHandle_RespawnDelay, Delegate, RespawnDelay, false);
+
+		UE_LOG(LogTemp, Log, TEXT("OnActorKilled: victim: %s, Killer: %s"), *GetNameSafe(VictimActor), *GetNameSafe(Killer));
 	}
 }
