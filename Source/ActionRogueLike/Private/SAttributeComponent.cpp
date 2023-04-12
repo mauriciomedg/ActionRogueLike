@@ -38,16 +38,16 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 		return false;
 	}
 
-	float CurrentHealt = Health;
+	float OldHealth = Health;
 
-	Health += Delta;
+	Health = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
 
-	Health = FMath::Min(FMath::Max(Health, 0.0f), HealthMax);
+	float ActualDelta = Health - OldHealth;
 
-	OnHealthChange.Broadcast(InstigatorActor, this, Health, Delta);
+	OnHealthChange.Broadcast(InstigatorActor, this, Health, ActualDelta);
 
 	// Dead
-	if (Health == 0.0f)
+	if (ActualDelta < 0.0f && Health == 0.0f)
 	{
 		// Auth Authority, GameMode only exist in the sever.
 		ASGameModeBase* GM = GetWorld()->GetAuthGameMode<ASGameModeBase>();
@@ -58,7 +58,7 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 		}
 	}
 
-	return Health != CurrentHealt;
+	return ActualDelta != 0.0f;
 }
 
 USAttributeComponent* USAttributeComponent::GetAttributes(AActor* FromActor)
