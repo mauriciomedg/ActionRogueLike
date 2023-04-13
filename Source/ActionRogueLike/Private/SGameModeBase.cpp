@@ -9,6 +9,10 @@
 #include "DrawDebugHelpers.h"
 #include "SCharacter.h"
 
+// su. its to make the own category of console variables
+// ECVF_Cheat means that it is not include in the final build
+static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("su.SpawnBots"), true, TEXT("Enable spawning of bots via timer"), ECVF_Cheat);
+
 ASGameModeBase::ASGameModeBase()
 {
 	SpawnTimerInterval = 2.0f;
@@ -24,6 +28,12 @@ void ASGameModeBase::StartPlay()
 
 void ASGameModeBase::SpawnBotTimerElapsed()
 {
+	if (!CVarSpawnBots.GetValueOnGameThread())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Bot spawing disable via cvar 'CVarSpawnBots'."));
+		return;
+	}
+
 	UEnvQueryInstanceBlueprintWrapper* QueryInst = UEnvQueryManager::RunEQSQuery(this, SpawnBotQuery, this, EEnvQueryRunMode::RandomBest5Pct, nullptr);
 
 	// This is a better version of (GetAllActorsOfClassBy) 
