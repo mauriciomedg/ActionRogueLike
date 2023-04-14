@@ -37,7 +37,7 @@ bool USAttributeComponent::IsAlive() const
 
 bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delta)
 {
-	if (!GetOwner()->CanBeDamaged()) // can be damage could be set in the console as God
+	if (!GetOwner()->CanBeDamaged() && Delta < 0.0f) // can be damage could be set in the console as God
 	{
 		return false;
 	}
