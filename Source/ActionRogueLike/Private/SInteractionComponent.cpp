@@ -51,7 +51,7 @@ void USInteractionComponent::PrimaryInteract()
 
 	MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
 
-	FVector End(EyeLocation + (EyeRotation.Vector() * 300.0f));
+	FVector End(EyeLocation + (EyeRotation.Vector() * 1000.0f));
 
 	//FHitResult Hit;
 	//bool bBlocking = GetWorld()->LineTraceSingleByObjectType(Hit, EyeLocation, End, ObjectQueryParams);

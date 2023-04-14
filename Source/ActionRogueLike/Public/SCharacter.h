@@ -80,7 +80,9 @@ protected:
 	void PrimaryAttackMagicP_TimeEnlapsed();
 	void PrimaryAttackBlackHole_TimeEnlapsed();
 	void PrimaryAttackTeleport_TimeEnlapsed();
-	
+
+	virtual FVector GetPawnViewLocation() const override;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
