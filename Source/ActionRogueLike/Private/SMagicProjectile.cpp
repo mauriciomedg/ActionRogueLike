@@ -6,6 +6,7 @@
 //#include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "SAttributeComponent.h"
+#include "SGamePlayFunctionLibrary.h"
 #include "Components/SphereComponent.h"
 //#include "Particles/ParticleSystemComponent.h"
 //#include "PhysicsEngine/RadialForceComponent.h"
@@ -59,16 +60,21 @@ void ASMagicProjectile::OnActorHit(UPrimitiveComponent* HitComponent, AActor* Ot
 {
 	Super::OnActorHit(HitComponent, OtherActor, OtherComp, NormalImpulse, Hit);
 	
-	if (OtherActor && OtherActor != GetInstigator())
+	//if (OtherActor && OtherActor != GetInstigator())
+	//{
+	//	USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
+	//
+	//	if (AttributeComp)
+	//	{
+	//		AttributeComp->ApplyHealthChange(GetInstigator(), -DamageAmount);
+	//
+	//		Destroy();
+	//	}
+	//}
+
+	if (USGamePlayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, DamageAmount, Hit))
 	{
-		USAttributeComponent* AttributeComp = Cast<USAttributeComponent>(OtherActor->GetComponentByClass(USAttributeComponent::StaticClass()));
-
-		if (AttributeComp)
-		{
-			AttributeComp->ApplyHealthChange(GetInstigator(), -DamageAmount);
-
-			Destroy();
-		}
+		Destroy();
 	}
 }
 
