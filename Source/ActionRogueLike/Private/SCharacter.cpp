@@ -8,6 +8,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "SInteractionComponent.h"
 #include "SAttributeComponent.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -27,6 +28,8 @@ ASCharacter::ASCharacter()
 	bUseControllerRotationYaw = false;
 
 	AttributeComp = CreateDefaultSubobject<USAttributeComponent>("AttributeComp");
+
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Ignore);
 
 	HandSocketName = "Muzzle_01";
 }
