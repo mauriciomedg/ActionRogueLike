@@ -9,6 +9,7 @@
 
 class UEnvQuery;
 class UCurveFloat;
+class ASPlayerState;
 
 /**
  * 

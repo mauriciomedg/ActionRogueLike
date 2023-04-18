@@ -8,6 +8,7 @@
 #include "EngineUtils.h" // for TActorIterator<>
 #include "DrawDebugHelpers.h"
 #include "SCharacter.h"
+#include "SPlayerState.h"
 
 // su. its to make the own category of console variables
 // ECVF_Cheat means that it is not include in the final build
@@ -132,5 +133,22 @@ void ASGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
 		GetWorldTimerManager().SetTimer(TimerHandle_RespawnDelay, Delegate, RespawnDelay, false);
 
 		UE_LOG(LogTemp, Log, TEXT("OnActorKilled: victim: %s, Killer: %s"), *GetNameSafe(VictimActor), *GetNameSafe(Killer));
+	}
+	else
+	{
+		ASAICharacter* Bot = Cast<ASAICharacter>(VictimActor);
+
+		if (Bot)
+		{
+			Player = Cast<ASCharacter>(Killer);
+			if (Player)
+			{
+				ASPlayerState* PayerState = ASPlayerState::GetSPlayerState(Player);// Cast<ASPlayerState>(Player->GetPlayerState()); // GetSPlayerState();
+				if (PayerState)
+				{
+					PayerState->GrantCredits(PayerState->BotKilled);
+				}
+			}
+		}
 	}
 }

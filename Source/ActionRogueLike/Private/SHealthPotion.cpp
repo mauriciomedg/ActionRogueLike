@@ -3,6 +3,8 @@
 
 #include "SHealthPotion.h"
 #include "SAttributeComponent.h"
+#include "SGameModeBase.h"
+#include "SPlayerState.h"
 #include "Components/StaticMeshComponent.h"
 
 // Sets default values
@@ -35,6 +37,16 @@ void ASHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 
 		if (AttributeComp)
 		{
+			ASPlayerState* PayerState = ASPlayerState::GetSPlayerState(InstigatorPawn);
+
+			if (PayerState)
+			{
+				if (!PayerState->CostCredits(PayerState->PotionCost))
+				{
+					return;
+				}
+			}
+			
 			if (AttributeComp->ApplyHealthChange(this, 100.0f))
 			{
 				if (ensure(BottleMesh))
