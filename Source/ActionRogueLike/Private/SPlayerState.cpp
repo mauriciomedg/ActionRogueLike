@@ -7,13 +7,15 @@
 void ASPlayerState::GrantCredits(float Credit)
 {
 	SetScore(GetScore() + Credit);
+	OnCreditChange.Broadcast(GetScore(), true);
 }
 
 bool ASPlayerState::CostCredits(float Cost)
 {
 	if (GetScore() > Cost)
 	{
-		GrantCredits(-Cost);
+		SetScore(GetScore() - Cost);
+		OnCreditChange.Broadcast(GetScore(), false);
 
 		return true;
 	}

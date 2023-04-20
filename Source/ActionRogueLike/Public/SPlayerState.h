@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerState.h"
 #include "SPlayerState.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCreditChanged, float, NewCredit, bool, bGrant);
+
 /**
  * 
  */
@@ -27,6 +29,9 @@ public:
 
 	UFUNCTION()
 	bool CostCredits(float Cost);
+
+	UPROPERTY(BlueprintAssignable)
+	FOnCreditChanged OnCreditChange;
 
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	static ASPlayerState* GetSPlayerState(AActor* Player);
