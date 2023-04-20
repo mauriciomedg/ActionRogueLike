@@ -3,34 +3,27 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "SGameplayInterface.h"
-#include "SItem.h"
-#include "SHealthPotion.generated.h"
-
-class UStaticMeshComponent;
+#include "GameFramework/Actor.h"
+#include "SItem.generated.h"
 
 UCLASS()
-class ACTIONROGUELIKE_API ASHealthPotion : public ASItem, public ISGameplayInterface
+class ACTIONROGUELIKE_API ASItem : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ASHealthPotion();
-
-	void Interact_Implementation(APawn* InstigatorPawn);
-
+	ASItem();
+	
 protected:
-
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* BottleMesh;
-
-	UFUNCTION()
-	void EnableHealthPotion();
-
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	virtual bool PickUp(APawn* InstigatorPawn, bool IsCredit);
+
+	UPROPERTY(VisibleAnywhere, Category = "Credit")
+	float Credit = 0.0f;
 
 public:	
 	// Called every frame

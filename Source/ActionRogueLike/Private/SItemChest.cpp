@@ -11,9 +11,13 @@ ASItemChest::ASItemChest()
 
 	LidMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LidMesh"));
 	LidMesh->SetupAttachment(BaseMesh);
+
+	Credit = 1.0f;
 }
 
 void ASItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
-	LidMesh->SetRelativeRotation(FRotator(TargetPitch, 0, 0));
+	PickUp(InstigatorPawn, true);
+
+	//LidMesh->SetRelativeRotation(FRotator(TargetPitch, 0, 0));
 }

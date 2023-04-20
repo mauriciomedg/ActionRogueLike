@@ -16,6 +16,7 @@ ASHealthPotion::ASHealthPotion()
 	BottleMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BottleMesh"));
 	RootComponent = BottleMesh;
 
+	Credit = 3.0f;
 	// we can do a
 	//BottleMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	// and add a sphere to handle the overlap.
@@ -37,27 +38,16 @@ void ASHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 
 		if (AttributeComp)
 		{
-			ASPlayerState* PayerState = ASPlayerState::GetSPlayerState(InstigatorPawn);
-
-			if (PayerState)
+			if (!PickUp(InstigatorPawn, false))
 			{
-				if (!PayerState->CostCredits(PayerState->PotionCost))
-				{
-					return;
-				}
+				return;
 			}
 			
 			if (AttributeComp->ApplyHealthChange(this, 100.0f))
 			{
-				if (ensure(BottleMesh))
-				{
-					//BottleMesh->SetVisibility(false);
-					//BottleMesh->SetCollisionProfileName("NoCollision");
-
-					SetActorEnableCollision(false);
-					RootComponent->SetVisibility(false, true);
-				}
-
+				SetActorEnableCollision(false);
+				RootComponent->SetVisibility(false, true);
+		
 				FTimerHandle TimerHandel_EnableHealthPotion;
 				GetWorldTimerManager().SetTimer(TimerHandel_EnableHealthPotion, this, &ASHealthPotion::EnableHealthPotion, 5);
 			}

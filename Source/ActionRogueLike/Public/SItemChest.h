@@ -5,12 +5,13 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "SGameplayInterface.h"
+#include "SItem.h"
 #include "SItemChest.generated.h"
 
 class UStaticMeshComponent;
 
 UCLASS()
-class ACTIONROGUELIKE_API ASItemChest : public AActor, public ISGameplayInterface
+class ACTIONROGUELIKE_API ASItemChest : public ASItem, public ISGameplayInterface
 {
 	GENERATED_BODY()
 
