@@ -8,6 +8,7 @@
 #include "EngineUtils.h" // for TActorIterator<>
 #include "DrawDebugHelpers.h"
 #include "SCharacter.h"
+#include "SHealthPotion.h"
 #include "SPlayerState.h"
 
 // su. its to make the own category of console variables
@@ -91,6 +92,25 @@ void ASGameModeBase::OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryIn
 	}
 }
 
+void ASGameModeBase::OnQueryHealthPotionCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus)
+{
+	if (QueryStatus != EEnvQueryStatus::Success)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Spawn bot EQS Query Failed!"));
+		return;
+	}
+
+	TArray<FVector> Locations = QueryInstance->GetResultsAsLocations();
+
+	if (Locations.IsValidIndex(0))//Locations.Num() > 0)
+	{
+		GetWorld()->SpawnActor<AActor>(HealthPotionClass, Locations[0], FRotator::ZeroRotator);
+
+		DrawDebugSphere(GetWorld(), Locations[0], 50.0f, 20, FColor::Blue, false, 60.0f);
+	}
+}
+
+
 void ASGameModeBase::KillAll()
 {
 	for (TActorIterator<ASAICharacter> It(GetWorld()); It; ++It)
@@ -150,5 +170,34 @@ void ASGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
 				}
 			}
 		}
+	}
+}
+
+void ASGameModeBase::OnHealthPotionPickUp()
+{
+	UEnvQueryInstanceBlueprintWrapper* QueryInst = UEnvQueryManager::RunEQSQuery(this, SpawnBotQuery, this, EEnvQueryRunMode::RandomBest5Pct, nullptr);
+
+	// This is a better version of (GetAllActorsOfClassBy) 
+	int32 NbHealthPotion = 0;
+	for (TActorIterator<ASHealthPotion> It(GetWorld()); It; ++It)
+	{
+		ASHealthPotion* Item = *It;
+		NbHealthPotion++;
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Found %i HealthPotion."), NbHealthPotion);
+
+	float MaxHealthPotion = 10.0f;
+
+	if (NbHealthPotion > MaxHealthPotion)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("At maximum bot capacity. Skipping bot spawn"));
+		return;
+	}
+
+	if (ensure(SpawnBotQuery))
+	{
+		// Can run in multiple frames
+		QueryInst->GetOnQueryFinishedEvent().AddDynamic(this, &ASGameModeBase::OnQueryHealthPotionCompleted);
 	}
 }

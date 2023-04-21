@@ -45,6 +45,13 @@ void ASHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 			
 			if (AttributeComp->ApplyHealthChange(this, 100.0f))
 			{
+				ASGameModeBase* GM = GetWorld()->GetAuthGameMode<ASGameModeBase>();
+
+				if (GM)
+				{
+					GM->OnHealthPotionPickUp();
+				}
+
 				SetActorEnableCollision(false);
 				RootComponent->SetVisibility(false, true);
 		

@@ -24,6 +24,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	TSubclassOf<AActor> MinionClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Item")
+	TSubclassOf<AActor> HealthPotionClass;
+
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	UEnvQuery* SpawnBotQuery;
 
@@ -42,6 +45,9 @@ protected:
 	void OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
 
 	UFUNCTION()
+	void OnQueryHealthPotionCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
+
+	UFUNCTION()
 	void RespawnPlayerElapse(AController* Controller); // we pass the controler since the character just die, it may be deleted.
 
 public:
@@ -49,6 +55,8 @@ public:
 	ASGameModeBase();
 
 	virtual void OnActorKilled(AActor* VictimActor, AActor* Killer);
+
+	virtual void OnHealthPotionPickUp();
 
 	//Game mode it is responsable to call the begin play on the all actor in the world
 	virtual void StartPlay() override;
