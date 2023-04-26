@@ -130,12 +130,7 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 void ASCharacter::PrimaryAttackMagicProjectile()
 {
-	PlayAnimMontage(AttackAnim);
-
-	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttackMagicP_TimeEnlapsed, 0.2);
-
-	// This is declared when the character die
-	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
+	ActionComp->StartActionByName(this, "PrimaryAttack");
 }
 
 void ASCharacter::PrimaryAttackBlackHole()
