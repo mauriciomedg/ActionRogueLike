@@ -24,20 +24,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Effect")
 	FName HandSocketName;
 	
-	UPROPERTY(EditAnywhere, Category = "Atack")
-	TSubclassOf<AActor> ProjectileMagicClass;
-
-	UPROPERTY(EditAnywhere, Category = "Atack")
-	TSubclassOf<AActor> ProjectileBlackHoleClass;
-
-	UPROPERTY(EditAnywhere, Category = "Atack")
-	TSubclassOf<AActor> ProjectileTeleport;
-
-	UPROPERTY(EditAnywhere, Category = "Atack")
-	UAnimMontage* AttackAnim;
-
-	FTimerHandle TimerHandle_PrimaryAttack;
-
 	UFUNCTION()
 	void OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwingComp, float NewHealth, float Delta);
 
@@ -80,13 +66,7 @@ protected:
 	void PrimaryAttackMagicProjectile();
 	void PrimaryAttackBlackHole();
 	void PrimaryAttackTeleport();
-
-	void PrimaryAttack_TimeEnlapsed(TSubclassOf<AActor> ProjectileClass);
-
-	void PrimaryAttackMagicP_TimeEnlapsed();
-	void PrimaryAttackBlackHole_TimeEnlapsed();
-	void PrimaryAttackTeleport_TimeEnlapsed();
-
+	
 	virtual FVector GetPawnViewLocation() const override;
 
 public:	

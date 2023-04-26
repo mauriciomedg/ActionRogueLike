@@ -33,8 +33,7 @@ ASCharacter::ASCharacter()
 	ActionComp = CreateDefaultSubobject<USActionComponent>("ActionComp");
 
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Ignore);
-
-	HandSocketName = "Muzzle_01";
+	
 }
 
 void ASCharacter::PostInitializeComponents()
@@ -135,83 +134,12 @@ void ASCharacter::PrimaryAttackMagicProjectile()
 
 void ASCharacter::PrimaryAttackBlackHole()
 {
-	PlayAnimMontage(AttackAnim);
-
-	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttackBlackHole_TimeEnlapsed, 0.2);
-
-	// This is declared when the character die
-	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
+	ActionComp->StartActionByName(this, "BlackHole");
 }
 
 void ASCharacter::PrimaryAttackTeleport()
 {
-	PlayAnimMontage(AttackAnim);
-
-	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttackTeleport_TimeEnlapsed, 0.2);
-
-	// This is declared when the character die
-	// GetWorldTimerManager().ClearTimer(TimerHandle_PrimaryAttack);
-}
-
-void ASCharacter::PrimaryAttack_TimeEnlapsed(TSubclassOf<AActor> ProjectileClass)
-{
-	if (ensure(ProjectileClass)) // ensureAlways() that triggers everytime. In package game this is removed.
-	{
-		// get socket (marked added in the bones of the skeleton mesh)
-		FVector HandLocation = GetMesh()->GetSocketLocation(HandSocketName);
-
-		FActorSpawnParameters SpawnParams;
-		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-		SpawnParams.Instigator = this;
-
-		FCollisionObjectQueryParams ObjectQueryParams;
-		ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
-		ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
-		ObjectQueryParams.AddObjectTypesToQuery(ECC_PhysicsBody);
-
-		FVector EyeLocation;
-		FRotator EyeRotation;
-
-		// get info from camera view 
-		FMinimalViewInfo ViewInfo;
-		CameraComp->GetCameraView(0.0f, ViewInfo);
-		EyeLocation = ViewInfo.Location;
-		EyeRotation = ViewInfo.Rotation;
-		//
-
-		FCollisionShape Shape;
-		Shape.SetSphere(20.0f);
-
-		FCollisionQueryParams Params;
-		Params.AddIgnoredActor(this);
-
-		// Ray trace from that view
-		FVector End(EyeLocation + (EyeRotation.Vector() * 5000.0f));
-		//FVector End = CameraComp->GetComponentLocation() + (GetControlRotation().Vector() * 5000);
-
-		FHitResult Hit;
-
-		if (GetWorld()->SweepSingleByObjectType(Hit, EyeLocation, End, FQuat::Identity, ObjectQueryParams, Shape, Params))
-		{
-			End = Hit.ImpactPoint;
-		}
-
-		FRotator ProjRotation = FRotationMatrix::MakeFromX(End - HandLocation).Rotator();
-
-		FTransform SpawnTM = FTransform(ProjRotation, HandLocation);
-
-		//if (bBlocking)
-		//{
-		//	UE_LOG(LogTemp, Warning, TEXT("Block Other Actor %s, line trace from camera, at game time %f"), *GetNameSafe(Hit.GetActor()), GetWorld()->TimeSeconds);
-		//
-		//	// Spawn from here for precision
-		//	FRotator NewRotation = (Hit.Location - HandLocation).Rotation();
-		//	SpawnTM = FTransform(NewRotation, HandLocation);
-		//
-		//}
-		
-		GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTM, SpawnParams);
-	}
+	ActionComp->StartActionByName(this, "Dash");
 }
 
 void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent* OwingComp, float NewHealth, float Delta)
@@ -227,21 +155,6 @@ void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent*
 
 		DisableInput(PlayerCtr);
 	}
-}
-
-void ASCharacter::PrimaryAttackMagicP_TimeEnlapsed()
-{
-	PrimaryAttack_TimeEnlapsed(ProjectileMagicClass);
-}
-
-void ASCharacter::PrimaryAttackBlackHole_TimeEnlapsed()
-{
-	PrimaryAttack_TimeEnlapsed(ProjectileBlackHoleClass);
-}
-
-void ASCharacter::PrimaryAttackTeleport_TimeEnlapsed()
-{
-	PrimaryAttack_TimeEnlapsed(ProjectileTeleport);
 }
 
 void ASCharacter::HealSelf(float Amount /* - 100 */)

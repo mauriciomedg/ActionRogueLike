@@ -28,6 +28,9 @@ public:
 	
 protected:
 
+	UPROPERTY(EditAnywhere, Category = "Actions")
+	TArray<TSubclassOf<USAction>> DefaultActions;
+
 	UPROPERTY() // we tell unreal that there is some memory to keep in mind
 	TArray<USAction*> Actions;
 
