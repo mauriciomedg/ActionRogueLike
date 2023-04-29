@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "GameplayTagContainer.h"
 #include "SAction.generated.h"
 
+class USActionComponent;
 /**
  * 
  */
@@ -13,6 +15,19 @@ UCLASS(Blueprintable) // Without it we cannot have child classes from USAction, 
 class ACTIONROGUELIKE_API USAction : public UObject
 {
 	GENERATED_BODY()
+
+protected:
+
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	USActionComponent* GetOwningComponent() const;
+
+	/* Tags added to owinig actor when activated, removed when action stops*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tags")
+	FGameplayTagContainer GrantTags;
+
+	/* Action can only start if OwningActor has none of these Tags applied*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tags")
+	FGameplayTagContainer BlockedTags;
 
 public:
 
