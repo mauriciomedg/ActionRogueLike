@@ -35,13 +35,13 @@ ASProjectileBase::ASProjectileBase()
 
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComp");
 	//MovementComp->InitialSpeed = 1000.0f;
-	//MovementComp->bRotationFollowsVelocity = true;
+	MovementComp->bRotationFollowsVelocity = true;
 	//MovementComp->bInitialVelocityInLocalSpace = true;
 }
 
 void ASProjectileBase::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	Explode();
+	//Explode();
 }
 
 void ASProjectileBase::Explode_Implementation()
