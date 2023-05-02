@@ -21,18 +21,19 @@ void AExplosiveBarrel::PostInitializeComponents()
 	RadialForceComp = Cast<URadialForceComponent>(GetComponentByClass(URadialForceComponent::StaticClass()));
 	StaticMeshComp = Cast<UStaticMeshComponent>(GetComponentByClass(UStaticMeshComponent::StaticClass()));
 
-	StaticMeshComp->OnComponentHit.AddDynamic(this, &AExplosiveBarrel::OnCompHit);
+	StaticMeshComp->OnComponentBeginOverlap.AddDynamic(this, &AExplosiveBarrel::OnActorOverlap);
 }
 
-void AExplosiveBarrel::OnCompHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+//void AExplosiveBarrel::OnCompHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AExplosiveBarrel::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	RadialForceComp->FireImpulse();
 
 	UE_LOG(LogTemp, Log, TEXT("OnActorHit in Explosive Barrel"));
 	UE_LOG(LogTemp, Warning, TEXT("OtherActor %s, at game time %f"), *GetNameSafe(OtherActor), GetWorld()->TimeSeconds);
 
-	FString CombinedString = FString::Printf(TEXT("Hit at location: %s"), *Hit.ImpactPoint.ToString());
-	DrawDebugString(GetWorld(), Hit.ImpactPoint, CombinedString, nullptr, FColor::Green, 2.2f, true);
+	FString CombinedString = FString::Printf(TEXT("Hit at location: %s"), *SweepResult.ImpactPoint.ToString());
+	DrawDebugString(GetWorld(), SweepResult.ImpactPoint, CombinedString, nullptr, FColor::Green, 2.2f, true);
 }
 
 // Called when the game starts or when spawned
