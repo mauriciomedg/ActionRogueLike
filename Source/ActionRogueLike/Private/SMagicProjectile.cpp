@@ -62,13 +62,13 @@ void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 	{
 		USActionComponent* ActionComp = Cast<USActionComponent>(OtherActor->GetComponentByClass(USActionComponent::StaticClass()));
 
-		//if (ActionComp && ActionComp->ActiveGameplayTags.HasTag(ParryTag))
-		//{
-		//	MovementComp->Velocity = -MovementComp->Velocity;
-		//	SetInstigator(Cast<APawn>(OtherActor));
-		//
-		//	return;
-		//}
+		if (ActionComp && ActionComp->ActiveGameplayTags.HasTag(ParryTag))
+		{
+			MovementComp->Velocity = -MovementComp->Velocity;
+			SetInstigator(Cast<APawn>(OtherActor));
+		
+			return;
+		}
 
 		if (USGamePlayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, DamageAmount, SweepResult))
 		{
