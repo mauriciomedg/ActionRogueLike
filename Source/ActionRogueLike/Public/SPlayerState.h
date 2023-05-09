@@ -6,7 +6,7 @@
 #include "GameFramework/PlayerState.h"
 #include "SPlayerState.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCreditChanged, float, NewCredit, bool, bGrant);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCreditChanged, int32, NewCredit, bool, bGrant);
 
 /**
  * 
@@ -17,18 +17,12 @@ class ACTIONROGUELIKE_API ASPlayerState : public APlayerState
 	GENERATED_BODY()
 
 public:
-
-	UPROPERTY(EditAnywhere, Category = "Cost")
-	float PotionCost = 3.0f;
-
-	UPROPERTY(EditAnywhere, Category = "Grant")
-	float BotKilled = 10.0f;
+	
+	UFUNCTION()
+	void GrantCredits(int32 Credit);
 
 	UFUNCTION()
-	void GrantCredits(float Credit);
-
-	UFUNCTION()
-	bool CostCredits(float Cost);
+	bool CostCredits(int32 Cost);
 
 	UPROPERTY(BlueprintAssignable)
 	FOnCreditChanged OnCreditChange;

@@ -38,6 +38,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	UCurveFloat* DifficultyCurve;
 
+	UPROPERTY(EditAnywhere, Category = "Grant")
+	int32 BotKilledCredit = 10;
+
 	UFUNCTION()
 	void SpawnBotTimerElapsed();
 

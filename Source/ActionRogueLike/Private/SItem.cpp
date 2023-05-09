@@ -18,19 +18,19 @@ void ASItem::BeginPlay()
 	Super::BeginPlay();
 }
 
-bool ASItem::PickUp(APawn* InstigatorPawn, bool IsCredit)
+bool ASItem::PickUp(APawn* InstigatorPawn, int32 DeltaCredit)
 {
 	ASPlayerState* PayerState = ASPlayerState::GetSPlayerState(InstigatorPawn);
 
 	if (PayerState)
 	{
-		if (IsCredit)
+		if (DeltaCredit > 0)
 		{
-			PayerState->GrantCredits(Credit);
+			PayerState->GrantCredits(DeltaCredit);
 			return true;
 		}
 		
-		if (PayerState->CostCredits(Credit))
+		if (PayerState->CostCredits(DeltaCredit))
 		{
 			return true;
 		}

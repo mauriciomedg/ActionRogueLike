@@ -4,17 +4,17 @@
 #include "SPlayerState.h"
 #include "SCharacter.h"
 
-void ASPlayerState::GrantCredits(float Credit)
+void ASPlayerState::GrantCredits(int32 Credit)
 {
 	SetScore(GetScore() + Credit);
 	OnCreditChange.Broadcast(GetScore(), true);
 }
 
-bool ASPlayerState::CostCredits(float Cost)
+bool ASPlayerState::CostCredits(int32 Cost)
 {
-	if (GetScore() > Cost)
+	if (GetScore() + Cost > 0)
 	{
-		SetScore(GetScore() - Cost);
+		SetScore(GetScore() + Cost);
 		OnCreditChange.Broadcast(GetScore(), false);
 
 		return true;

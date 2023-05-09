@@ -38,7 +38,7 @@ void ASHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 
 		if (AttributeComp)
 		{
-			if (!PickUp(InstigatorPawn, false))
+			if (!PickUp(InstigatorPawn, -PotionCost))
 			{
 				return;
 			}

@@ -27,6 +27,9 @@ public:
 
 protected:
 
+	UPROPERTY(EditAnywhere, Category = "Grant")
+	int32 TreasureCredit = 1;
+
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BaseMesh;
 

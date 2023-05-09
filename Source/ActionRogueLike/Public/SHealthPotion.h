@@ -23,6 +23,9 @@ public:
 
 protected:
 
+	UPROPERTY(EditAnywhere, Category = "Cost")
+	int32 PotionCost = 3;
+	
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BottleMesh;
 

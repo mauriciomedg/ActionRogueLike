@@ -17,7 +17,7 @@ ASItemChest::ASItemChest()
 
 void ASItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
-	PickUp(InstigatorPawn, true);
+	PickUp(InstigatorPawn, TreasureCredit);
 
 	//LidMesh->SetRelativeRotation(FRotator(TargetPitch, 0, 0));
 }

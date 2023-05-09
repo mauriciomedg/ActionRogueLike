@@ -20,10 +20,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	virtual bool PickUp(APawn* InstigatorPawn, bool IsCredit);
+	virtual bool PickUp(APawn* InstigatorPawn, int32 DeltaCredit);
 
 	UPROPERTY(VisibleAnywhere, Category = "Credit")
-	float Credit = 0.0f;
+	int32 Credit = 0;
 
 public:	
 	// Called every frame

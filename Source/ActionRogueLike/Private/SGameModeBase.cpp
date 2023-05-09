@@ -166,7 +166,7 @@ void ASGameModeBase::OnActorKilled(AActor* VictimActor, AActor* Killer)
 				ASPlayerState* PayerState = ASPlayerState::GetSPlayerState(Player);// Cast<ASPlayerState>(Player->GetPlayerState()); // GetSPlayerState();
 				if (PayerState)
 				{
-					PayerState->GrantCredits(PayerState->BotKilled);
+					PayerState->GrantCredits(BotKilledCredit);
 				}
 			}
 		}
