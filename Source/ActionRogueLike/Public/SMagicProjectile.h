@@ -7,6 +7,8 @@
 #include "GameplayTagContainer.h"
 #include "SMagicProjectile.generated.h"
 
+class USActionEffect;
+
 UCLASS()
 class ACTIONROGUELIKE_API ASMagicProjectile : public ASProjectileBase
 {
@@ -16,6 +18,8 @@ public:
 	// Sets default values for this actor's properties
 	ASMagicProjectile();
 
+protected:
+
 	virtual void PostInitializeComponents() override;
 
 	UPROPERTY(EditAnywhere, Category = "Damage")
@@ -24,7 +28,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	FGameplayTag ParryTag;
 
-protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	TSubclassOf<USActionEffect> BurningActionClass;
 		
 	//void OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 

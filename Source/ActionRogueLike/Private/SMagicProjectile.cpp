@@ -6,9 +6,9 @@
 //#include "Components/SphereComponent.h"
 #include "SActionComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "SAttributeComponent.h"
 #include "SGamePlayFunctionLibrary.h"
 #include "Components/SphereComponent.h"
+#include "SActionEffect.h"
 //#include "Particles/ParticleSystemComponent.h"
 //#include "PhysicsEngine/RadialForceComponent.h"
 
@@ -72,6 +72,11 @@ void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 
 		if (USGamePlayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, DamageAmount, SweepResult))
 		{
+		}
+
+		if (ActionComp)
+		{
+			ActionComp->AddAction(GetInstigator(), BurningActionClass);
 		}
 
 		Explode();
