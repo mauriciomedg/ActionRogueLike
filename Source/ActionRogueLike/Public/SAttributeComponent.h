@@ -35,6 +35,13 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	float Health;
 
+	// EditDefaultsOnly: Hide variable per-instance, edit in BP editor only 
+	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
+	float Rage = 0.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	float RageMax = 100.0f;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	float HealthMax = 100.0f;
 	

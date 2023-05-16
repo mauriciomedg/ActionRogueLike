@@ -55,6 +55,11 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 
 	float ActualDelta = Health - OldHealth;
 
+	if (ActualDelta < 0.0f)
+	{
+		Rage = FMath::Clamp(Health - ActualDelta, 0.0f, RageMax);
+	}
+
 	OnHealthChange.Broadcast(InstigatorActor, this, Health, ActualDelta);
 
 	// Dead
