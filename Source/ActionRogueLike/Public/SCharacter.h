@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GameplayTagContainer.h"
 #include "SCharacter.generated.h"
 
 class USpringArmComponent;
@@ -49,6 +50,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USActionComponent* ActionComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tag")
+	FGameplayTag GrantBlackHoleAttackTag;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

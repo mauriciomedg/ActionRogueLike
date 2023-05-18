@@ -149,6 +149,23 @@ void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent*
 		GetMesh()->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->TimeSeconds);
 	}
 
+	if (NewHealth < 50)
+	{
+		if (ActionComp->ActiveGameplayTags.HasTagExact(GrantBlackHoleAttackTag))
+		{
+			ActionComp->ActiveGameplayTags.RemoveTag(GrantBlackHoleAttackTag);
+		}
+	}
+	else
+	{
+		if (!ActionComp->ActiveGameplayTags.HasTagExact(GrantBlackHoleAttackTag))
+		{
+			ActionComp->ActiveGameplayTags.AddTag(GrantBlackHoleAttackTag);
+		}
+	}
+		
+	//}
+	
 	if (NewHealth <= 0.0f && Delta < 0.0f)
 	{
 		APlayerController* PlayerCtr = Cast<APlayerController>(GetController());
