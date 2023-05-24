@@ -79,7 +79,7 @@ void USInteractionComponent::FindBestInteractable()
 		{
 			if (bDebugDraw)
 			{
-				DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, LineColor, false, 2.0f);
+				DrawDebugSphere(GetWorld(), Hit.ImpactPoint, Radius, 32, LineColor, false, 0.0f);
 			}
 
 			if (HitActor->Implements<USGameplayInterface>())
@@ -108,23 +108,28 @@ void USInteractionComponent::FindBestInteractable()
 				DefaultWidgetInstance->AddToViewport();
 			}
 		}
-		else
+	}
+	else
+	{
+		if (DefaultWidgetInstance)
 		{
-			if (DefaultWidgetInstance)
-			{
-				// remove from view port
-				DefaultWidgetInstance->RemoveFromParent();
-			}
+			// remove from view port
+			DefaultWidgetInstance->RemoveFromParent();
 		}
 	}
 
 	if (bDebugDraw)
 	{
-		DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 2.0f);
+		DrawDebugLine(GetWorld(), EyeLocation, End, LineColor, false, 2.0f, 0, 0.0f);
 	}
 }
 
 void USInteractionComponent::PrimaryInteract()
+{
+	ServerInteract();
+}
+
+void USInteractionComponent::ServerInteract_Implementation()
 {
 	if (!FocusActor)
 	{
