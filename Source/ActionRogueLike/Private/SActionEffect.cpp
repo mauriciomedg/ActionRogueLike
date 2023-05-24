@@ -13,7 +13,7 @@ void USActionEffect::StartAction_Implementation(AActor* Instigator)
 {
 	Super::StartAction_Implementation(Instigator);
 
-	if (Duration > 0.0f)
+	if (Duration >= 0.0f)
 	{
 		FTimerDelegate Delegate;
 		Delegate.BindUFunction(this, "StopAction", Instigator);

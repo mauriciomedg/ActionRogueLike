@@ -13,6 +13,7 @@ class USInteractionComponent;
 class UAnimMontage;
 class USAttributeComponent;
 class USActionComponent;
+class USActionEffect;
 
 UCLASS()
 class ACTIONROGUELIKE_API ASCharacter : public ACharacter
@@ -53,6 +54,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tag")
 	FGameplayTag GrantBlackHoleAttackTag;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	TSubclassOf<USActionEffect> ThornsBuffEffect;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
