@@ -3,6 +3,7 @@
 
 #include "SItemChest.h"
 #include "Components/StaticMeshComponent.h"
+#include "Net/UnrealNetwork.h"
 
 ASItemChest::ASItemChest()
 {
@@ -13,11 +14,30 @@ ASItemChest::ASItemChest()
 	LidMesh->SetupAttachment(BaseMesh);
 
 	Credit = 1.0f;
+
+	// Tells Unreal to consider this actor to update that variables in the client
+	SetReplicates(true);
 }
 
 void ASItemChest::Interact_Implementation(APawn* InstigatorPawn)
 {
 	PickUp(InstigatorPawn, TreasureCredit);
 
-	//LidMesh->SetRelativeRotation(FRotator(TargetPitch, 0, 0));
+	bLidOpened = !bLidOpened;
+
+	float CurrPitch = bLidOpened ? TargetPitch : 0.0f;
+	LidMesh->SetRelativeRotation(FRotator(CurrPitch, 0, 0));
 }
+
+void ASItemChest::GetLifetimeReplicatedProps(TArray< FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// set rules for replicated params
+	// If the bLidOpened is changed in the server, send it to all the clients
+	// This is a default rule. To be sent to all the clients. It can be another rule
+	// that can be sent to an special client like a (hold a wearpon)
+
+	DOREPLIFETIME(ASItemChest, bLidOpened);
+}
+

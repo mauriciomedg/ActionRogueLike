@@ -27,6 +27,10 @@ public:
 
 protected:
 
+	//
+	UPROPERTY(Replicated, BlueprintReadOnly)
+	bool bLidOpened;
+
 	UPROPERTY(EditAnywhere, Category = "Grant")
 	int32 TreasureCredit = 1;
 
@@ -36,4 +40,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* LidMesh;
 	
+	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const;
+
 };
