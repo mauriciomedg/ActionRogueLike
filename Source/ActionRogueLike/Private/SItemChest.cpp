@@ -24,7 +24,11 @@ void ASItemChest::Interact_Implementation(APawn* InstigatorPawn)
 	PickUp(InstigatorPawn, TreasureCredit);
 
 	bLidOpened = !bLidOpened;
+	OnRep_LidOpened();
+}
 
+void ASItemChest::OnRep_LidOpened()
+{
 	float CurrPitch = bLidOpened ? TargetPitch : 0.0f;
 	LidMesh->SetRelativeRotation(FRotator(CurrPitch, 0, 0));
 }

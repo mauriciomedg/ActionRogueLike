@@ -28,8 +28,11 @@ public:
 protected:
 
 	//
-	UPROPERTY(Replicated, BlueprintReadOnly)
+	UPROPERTY(ReplicatedUsing = "OnRep_LidOpened", BlueprintReadOnly) // ReplicatedUsing == RepNotif Knowing in doc and blueprint
 	bool bLidOpened;
+
+	UFUNCTION()
+	void OnRep_LidOpened(); // this is only trigered automatically for clients. For the server we need to manually call it.
 
 	UPROPERTY(EditAnywhere, Category = "Grant")
 	int32 TreasureCredit = 1;
