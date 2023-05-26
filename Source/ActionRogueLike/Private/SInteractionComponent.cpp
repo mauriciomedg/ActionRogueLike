@@ -37,7 +37,13 @@ void USInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	FindBestInteractable();
+	// we run just the logic when it is locally controlled
+	APawn* MyPawn = Cast<APawn>(GetOwner());
+
+	if (MyPawn->IsLocallyControlled())
+	{
+		FindBestInteractable();
+	}
 }
 
 void USInteractionComponent::FindBestInteractable()
@@ -126,12 +132,14 @@ void USInteractionComponent::FindBestInteractable()
 
 void USInteractionComponent::PrimaryInteract()
 {
-	ServerInteract();
+	// Send that function as and RPC, the FocusActor will be converted into an ID to
+	// referenced in the server side. 
+	ServerInteract(FocusActor);
 }
 
-void USInteractionComponent::ServerInteract_Implementation()
+void USInteractionComponent::ServerInteract_Implementation(AActor* InFocus)
 {
-	if (!FocusActor)
+	if (!InFocus)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "No Focus Actor to interact");
 		return;
@@ -139,5 +147,5 @@ void USInteractionComponent::ServerInteract_Implementation()
 
 	APawn* MyPawn = Cast<APawn>(GetOwner());
 
-	ISGameplayInterface::Execute_Interact(FocusActor, MyPawn);
+	ISGameplayInterface::Execute_Interact(InFocus, MyPawn);
 }
