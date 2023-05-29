@@ -20,6 +20,8 @@ ASHealthPotion::ASHealthPotion()
 	// we can do a
 	//BottleMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	// and add a sphere to handle the overlap.
+
+	SetReplicates(true);
 }
 
 void ASHealthPotion::EnableHealthPotion()
