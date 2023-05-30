@@ -2,8 +2,8 @@
 
 
 #include "SAttributeComponent.h"
-
 #include "SGameModeBase.h"
+#include "Net/UnrealNetwork.h"
 
 // su. its to make the own category of console variables
 // ECVF_Cheat means that it is not include in the final build
@@ -13,6 +13,9 @@ static TAutoConsoleVariable<float> CVarDamageMultiplier(TEXT("su.DamageMultiplie
 USAttributeComponent::USAttributeComponent()
 {
 	Health = HealthMax;
+
+	// Because is a component, it needs to be called ..ByDefault(true) in the constructor
+	SetIsReplicatedByDefault(true);
 }
 
 bool USAttributeComponent::Kill(AActor* InstigatorActor)
@@ -60,8 +63,14 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 		Rage = FMath::Clamp(Health - ActualDelta, 0.0f, RageMax);
 	}
 
-	OnHealthChange.Broadcast(InstigatorActor, this, Health, ActualDelta);
-
+	if (ActualDelta != 0.0f)
+	{
+		// We can comment that becase if its called in the server, it will be called in its self and for the other clients. For the client side, this
+		// is call locally.
+		//OnHealthChange.Broadcast(InstigatorActor, this, Health, ActualDelta);
+		MulticastHealthChanged(InstigatorActor, Health, ActualDelta);
+	}
+	
 	// Dead
 	if (ActualDelta < 0.0f && Health == 0.0f)
 	{
@@ -100,3 +109,24 @@ bool USAttributeComponent::IsActorAlive(AActor* FromActor)
 	return false;
 }
 
+void USAttributeComponent::MulticastHealthChanged_Implementation(AActor* InstigatorActor, float NewHealth, float Delta)
+{
+	OnHealthChange.Broadcast(InstigatorActor, this, NewHealth, Delta);
+}
+
+void USAttributeComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// set rules for replicated params
+	// If the bLidOpened is changed in the server, send it to all the clients
+	// This is a default rule. To be sent to all the clients. It can be another rule
+	// that can be sent to an special client like a (hold a wearpon)
+
+	DOREPLIFETIME(USAttributeComponent, Health);
+	DOREPLIFETIME(USAttributeComponent, HealthMax);
+
+	//COND_OwnerOnly: means only the owner see the variable updated if it changes by gameplay example. 
+	//COND_InitialOnly: only when we spawn that player, we send it once.
+	//DOREPLIFETIME_CONDITION(USAttributeComponent, HealthMax, COND_OwnerOnly);
+}

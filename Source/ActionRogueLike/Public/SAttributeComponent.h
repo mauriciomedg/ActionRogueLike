@@ -32,8 +32,11 @@ public:
 protected:
 
 	// EditDefaultsOnly: Hide variable per-instance, edit in BP editor only 
-	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated, Category = "Attributes")
 	float Health;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Replicated, Category = "Attributes")
+	float HealthMax = 100.0f;
 
 	// EditDefaultsOnly: Hide variable per-instance, edit in BP editor only 
 	UPROPERTY(BlueprintReadOnly, Category = "Attributes")
@@ -42,9 +45,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	float RageMax = 100.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
-	float HealthMax = 100.0f;
-	
+	//Can be Unreliable this health change is cosmetic, but in the character is listeneted to disable controllers when the
+	//character dies.
+	//We can create bIsAlive and marked as ReplicatedUsing = ""  
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastHealthChanged(AActor* InstigatorActor, float NewHealth, float Delta);
+		
 public:
 
 	UFUNCTION()
