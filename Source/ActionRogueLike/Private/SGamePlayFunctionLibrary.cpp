@@ -30,8 +30,8 @@ bool USGamePlayFunctionLibrary::ApplyDirectionalDamage(AActor* DamageCauser, AAc
 			Direction.Normalize();
 
 			HitComp->AddImpulseAtLocation(Direction * 300000.f, HitResult.ImpactPoint, HitResult.BoneName);
-			return true;
 		}
+		return true;
 	}
 
 	return false;
