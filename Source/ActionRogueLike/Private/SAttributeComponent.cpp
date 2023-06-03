@@ -60,7 +60,8 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 
 	if (ActualDelta < 0.0f)
 	{
-		Rage = FMath::Clamp(Health - ActualDelta, 0.0f, RageMax);
+		Rage = FMath::Clamp(Rage - ActualDelta, 0.0f, RageMax);
+		MulticastRageChanged(InstigatorActor, Rage, ActualDelta);
 	}
 
 	if (ActualDelta != 0.0f)
@@ -109,9 +110,14 @@ bool USAttributeComponent::IsActorAlive(AActor* FromActor)
 	return false;
 }
 
-void USAttributeComponent::MulticastHealthChanged_Implementation(AActor* InstigatorActor, float NewHealth, float Delta)
+void USAttributeComponent::MulticastHealthChanged_Implementation(AActor* InstigatorActor, float NewValue, float Delta)
 {
-	OnHealthChange.Broadcast(InstigatorActor, this, NewHealth, Delta);
+	OnHealthChange.Broadcast(InstigatorActor, this, NewValue, Delta);
+}
+
+void USAttributeComponent::MulticastRageChanged_Implementation(AActor* InstigatorActor, float NewValue, float Delta)
+{
+	OnRageChange.Broadcast(InstigatorActor, this, NewValue, Delta);
 }
 
 void USAttributeComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty>& OutLifetimeProps) const
@@ -125,6 +131,8 @@ void USAttributeComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty>
 
 	DOREPLIFETIME(USAttributeComponent, Health);
 	DOREPLIFETIME(USAttributeComponent, HealthMax);
+	DOREPLIFETIME(USAttributeComponent, Rage);
+	DOREPLIFETIME(USAttributeComponent, RageMax);
 
 	//COND_OwnerOnly: means only the owner see the variable updated if it changes by gameplay example. 
 	//COND_InitialOnly: only when we spawn that player, we send it once.

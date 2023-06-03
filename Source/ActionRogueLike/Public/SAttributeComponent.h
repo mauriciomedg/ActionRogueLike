@@ -6,7 +6,11 @@
 #include "Components/ActorComponent.h"
 #include "SAttributeComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnHealthChanged, AActor*, InstigatorActor, USAttributeComponent*, OwingComp, float, NewHealth, float, Delta);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnHealthChanged, AActor*, InstigatorActor, USAttributeComponent*, OwingComp, float, NewHealth, float, Delta);
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnRageChanged, AActor*, InstigatorActor, USAttributeComponent*, OwingComp, float, NewHealth, float, Delta);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnAttributeChanged, AActor*, InstigatorActor, USAttributeComponent*, OwingComp, float, NewValue, float, Delta);
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ACTIONROGUELIKE_API USAttributeComponent : public UActorComponent
@@ -49,8 +53,11 @@ protected:
 	//character dies.
 	//We can create bIsAlive and marked as ReplicatedUsing = ""  
 	UFUNCTION(NetMulticast, Reliable)
-	void MulticastHealthChanged(AActor* InstigatorActor, float NewHealth, float Delta);
-		
+	void MulticastHealthChanged(AActor* InstigatorActor, float NewValue, float Delta);
+	
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastRageChanged(AActor* InstigatorActor, float NewValue, float Delta);
+
 public:
 
 	UFUNCTION()
@@ -63,7 +70,10 @@ public:
 	bool IsAlive() const;
 
 	UPROPERTY(BlueprintAssignable)
-	FOnHealthChanged OnHealthChange;
+	FOnAttributeChanged OnHealthChange;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChanged OnRageChange;
 
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool ApplyHealthChange(AActor* InstigatorActor, float Delta);
