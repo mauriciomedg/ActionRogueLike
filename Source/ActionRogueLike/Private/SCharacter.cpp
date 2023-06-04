@@ -48,11 +48,6 @@ void ASCharacter::PostInitializeComponents()
 void ASCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	if (ActionComp)
-	{
-		ActionComp->AddAction(GetInstigator(), ThornsBuffEffect);
-	}
 }
 
 void ASCharacter::MoveForward(float Value)
@@ -152,8 +147,6 @@ void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent*
 	if (Delta < 0.0f)
 	{
 		GetMesh()->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->TimeSeconds);
-	
-		ActionComp->StartActionByName(InstigatorActor, "Thorns");
 	}
 
 	if (NewHealth < 50)
@@ -170,8 +163,6 @@ void ASCharacter::OnHealthChanged(AActor* InstigatorActor, USAttributeComponent*
 			ActionComp->ActiveGameplayTags.AddTag(GrantBlackHoleAttackTag);
 		}
 	}
-		
-	//}
 	
 	if (NewHealth <= 0.0f && Delta < 0.0f)
 	{

@@ -55,8 +55,8 @@ protected:
 	UFUNCTION(NetMulticast, Reliable)
 	void MulticastHealthChanged(AActor* InstigatorActor, float NewValue, float Delta);
 	
-	UFUNCTION(NetMulticast, Reliable)
-	void MulticastRageChanged(AActor* InstigatorActor, float NewValue, float Delta);
+	//UFUNCTION(NetMulticast, Reliable)
+	//void MulticastRageChanged(AActor* InstigatorActor, float NewValue, float Delta);
 
 public:
 
@@ -77,4 +77,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool ApplyHealthChange(AActor* InstigatorActor, float Delta);
+
+	UFUNCTION(BlueprintCallable)
+	float GetRage() const; 
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	bool ApplyRage(AActor* InstigatorActor, float Delta);
 };

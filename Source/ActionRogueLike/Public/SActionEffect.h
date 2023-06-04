@@ -14,13 +14,12 @@ class ACTIONROGUELIKE_API USActionEffect : public USAction
 {
 	GENERATED_BODY()
 
+public:
 	USActionEffect();
 
-	void StartAction_Implementation(AActor* Instigator) override;
-
-	void StopAction_Implementation(AActor* Instigator) override;
-
 protected:
+	virtual void StartAction_Implementation(AActor* Instigator) override;
+	virtual void StopAction_Implementation(AActor* Instigator) override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effect")
 	float Duration;

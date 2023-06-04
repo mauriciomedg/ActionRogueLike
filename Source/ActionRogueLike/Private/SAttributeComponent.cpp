@@ -38,6 +38,11 @@ bool USAttributeComponent::IsAlive() const
 	return Health > 0.0f;
 }
 
+float USAttributeComponent::GetRage() const
+{
+	return Rage;
+}
+
 bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delta)
 {
 	if (!GetOwner()->CanBeDamaged() && Delta < 0.0f) // can be damage could be set in the console as God
@@ -60,8 +65,7 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 
 	if (ActualDelta < 0.0f)
 	{
-		Rage = FMath::Clamp(Rage - ActualDelta, 0.0f, RageMax);
-		MulticastRageChanged(InstigatorActor, Rage, ActualDelta);
+		ApplyRage(InstigatorActor, -ActualDelta);
 	}
 
 	if (ActualDelta != 0.0f)
@@ -84,6 +88,23 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 		}
 	}
 
+	return ActualDelta != 0.0f;
+}
+
+bool USAttributeComponent::ApplyRage(AActor* InstigatorActor, float Delta)
+{
+	float OldRage = Rage;
+
+	Rage = FMath::Clamp(Rage + Delta, 0.0f, RageMax);
+
+	float ActualDelta = Rage - OldRage;
+
+	if (ActualDelta != 0.0f)
+	{
+		OnRageChange.Broadcast(InstigatorActor, this, Rage, ActualDelta);
+		//MulticastRageChanged(InstigatorActor, Rage, ActualDelta);
+	}
+	
 	return ActualDelta != 0.0f;
 }
 
@@ -115,10 +136,10 @@ void USAttributeComponent::MulticastHealthChanged_Implementation(AActor* Instiga
 	OnHealthChange.Broadcast(InstigatorActor, this, NewValue, Delta);
 }
 
-void USAttributeComponent::MulticastRageChanged_Implementation(AActor* InstigatorActor, float NewValue, float Delta)
-{
-	OnRageChange.Broadcast(InstigatorActor, this, NewValue, Delta);
-}
+//void USAttributeComponent::MulticastRageChanged_Implementation(AActor* InstigatorActor, float NewValue, float Delta)
+//{
+//	OnRageChange.Broadcast(InstigatorActor, this, NewValue, Delta);
+//}
 
 void USAttributeComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -131,8 +152,8 @@ void USAttributeComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty>
 
 	DOREPLIFETIME(USAttributeComponent, Health);
 	DOREPLIFETIME(USAttributeComponent, HealthMax);
-	DOREPLIFETIME(USAttributeComponent, Rage);
-	DOREPLIFETIME(USAttributeComponent, RageMax);
+	//DOREPLIFETIME(USAttributeComponent, Rage);
+	//DOREPLIFETIME(USAttributeComponent, RageMax);
 
 	//COND_OwnerOnly: means only the owner see the variable updated if it changes by gameplay example. 
 	//COND_InitialOnly: only when we spawn that player, we send it once.

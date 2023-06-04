@@ -55,9 +55,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tag")
 	FGameplayTag GrantBlackHoleAttackTag;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Damage")
-	TSubclassOf<USActionEffect> ThornsBuffEffect;
-
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
