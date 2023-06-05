@@ -16,13 +16,20 @@ class ACTIONROGUELIKE_API ASPlayerState : public APlayerState
 {
 	GENERATED_BODY()
 
+protected:
+
+	UPROPERTY()
+	float Credits = 0.0f;
+
 public:
+
+	virtual void OnRep_Score() override;
 	
 	UFUNCTION()
 	void GrantCredits(int32 Credit);
 
 	UFUNCTION()
-	bool CostCredits(int32 Cost);
+	void CostCredits(int32 Cost);
 
 	UPROPERTY(BlueprintAssignable)
 	FOnCreditChanged OnCreditChange;

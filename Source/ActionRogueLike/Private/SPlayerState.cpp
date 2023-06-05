@@ -7,20 +7,29 @@
 void ASPlayerState::GrantCredits(int32 Credit)
 {
 	SetScore(GetScore() + Credit);
-	OnCreditChange.Broadcast(GetScore(), true);
+	OnRep_Score();
 }
 
-bool ASPlayerState::CostCredits(int32 Cost)
+void ASPlayerState::CostCredits(int32 Cost)
 {
-	if (GetScore() + Cost > 0)
-	{
-		SetScore(GetScore() + Cost);
-		OnCreditChange.Broadcast(GetScore(), false);
+	SetScore(GetScore() + Cost);
+	OnRep_Score();
+}
 
-		return true;
+void ASPlayerState::OnRep_Score()
+{
+	Super::OnRep_Score();
+
+	if (GetScore() > Credits)
+	{
+		OnCreditChange.Broadcast(GetScore(), true);
+	}
+	else
+	{
+		OnCreditChange.Broadcast(GetScore(), false);
 	}
 
-	return false;
+	Credits = GetScore();
 }
 
 ASPlayerState* ASPlayerState::GetSPlayerState(AActor* Player)

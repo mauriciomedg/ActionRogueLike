@@ -30,8 +30,9 @@ bool ASItem::PickUp(APawn* InstigatorPawn, int32 DeltaCredit)
 			return true;
 		}
 		
-		if (PayerState->CostCredits(DeltaCredit))
+		if (PayerState->GetScore() + DeltaCredit > 0)
 		{
+			PayerState->CostCredits(DeltaCredit);
 			return true;
 		}
 	}
