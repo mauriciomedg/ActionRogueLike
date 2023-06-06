@@ -26,6 +26,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Cost")
 	int32 PotionCost = 3;
 	
+	UPROPERTY(ReplicatedUsing = "OnRep_PotionTaken", BlueprintReadOnly) // ReplicatedUsing == RepNotif Knowing in doc and blueprint
+	bool bPotionTaken;
+
+	UFUNCTION()
+	void OnRep_PotionTaken(); // this is only trigered automatically for clients. For the server we need to manually call it.
+
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BottleMesh;
 
@@ -34,6 +40,8 @@ protected:
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty>& OutLifetimeProps) const;
 
 public:	
 	// Called every frame

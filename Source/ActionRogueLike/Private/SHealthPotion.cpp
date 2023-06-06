@@ -6,6 +6,7 @@
 #include "SGameModeBase.h"
 #include "SPlayerState.h"
 #include "Components/StaticMeshComponent.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 ASHealthPotion::ASHealthPotion()
@@ -54,14 +55,20 @@ void ASHealthPotion::Interact_Implementation(APawn* InstigatorPawn)
 					GM->OnHealthPotionPickUp();
 				}
 
-				SetActorEnableCollision(false);
-				RootComponent->SetVisibility(false, true);
-		
-				FTimerHandle TimerHandel_EnableHealthPotion;
-				GetWorldTimerManager().SetTimer(TimerHandel_EnableHealthPotion, this, &ASHealthPotion::EnableHealthPotion, 5);
+				bPotionTaken = !bPotionTaken;
+				OnRep_PotionTaken();
 			}
 		}
 	}
+}
+
+void ASHealthPotion::OnRep_PotionTaken()
+{
+	SetActorEnableCollision(false);
+	RootComponent->SetVisibility(false, true);
+
+	FTimerHandle TimerHandel_EnableHealthPotion;
+	GetWorldTimerManager().SetTimer(TimerHandel_EnableHealthPotion, this, &ASHealthPotion::EnableHealthPotion, 5);
 }
 
 // Called when the game starts or when spawned
@@ -76,5 +83,17 @@ void ASHealthPotion::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ASHealthPotion::GetLifetimeReplicatedProps(TArray< FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// set rules for replicated params
+	// If the bLidOpened is changed in the server, send it to all the clients
+	// This is a default rule. To be sent to all the clients. It can be another rule
+	// that can be sent to an special client like a (hold a wearpon)
+
+	DOREPLIFETIME(ASHealthPotion, bPotionTaken);
 }
 
