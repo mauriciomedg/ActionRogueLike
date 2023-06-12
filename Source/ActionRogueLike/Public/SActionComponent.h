@@ -42,7 +42,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Actions")
 	TArray<TSubclassOf<USAction>> DefaultActions;
 
-	UPROPERTY() // we tell unreal that there is some memory to keep in mind
+	UPROPERTY(Replicated) // we tell unreal that there is some memory to keep in mind
 	TArray<USAction*> Actions;
 
 	// Called when the game starts
@@ -52,5 +52,6 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	bool ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
+
 };

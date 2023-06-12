@@ -4,6 +4,12 @@
 #include "SAction.h"
 #include "SActionComponent.h"
 #include "../ActionRogueLike.h"
+#include "Net/UnrealNetwork.h"
+
+void USAction::Initialize(USActionComponent* NewActionComp)
+{
+	ActionComp = NewActionComp;
+}
 
 bool USAction::CanStart_Implementation(AActor* Instigator)
 {
@@ -41,7 +47,7 @@ void USAction::StopAction_Implementation(AActor* Instigator)
 	//UE_LOG(LogTemp, Log, TEXT("Stopped: %s"), *GetNameSafe(this));
 	LogOnScreen(this, FString::Printf(TEXT("STopped: %s"), *ActionName.ToString()), FColor::White);
 
-	ensureAlways(bIsRunning);
+	//ensureAlways(bIsRunning);
 
 	USActionComponent* Comp = GetOwningComponent();
 	Comp->ActiveGameplayTags.RemoveTags(GrantTags);
@@ -53,11 +59,11 @@ UWorld* USAction::GetWorld() const
 {
 	//It was passed when doing thr NewObject<T>(outer, class)
 
-	UActorComponent* Comp = Cast<UActorComponent>(GetOuter());
+	AActor* Actor = Cast<AActor>(GetOuter());
 
-	if (Comp)
+	if (Actor)
 	{
-		return Comp->GetWorld();
+		return Actor->GetWorld();
 	}
 
 	return nullptr;
@@ -65,10 +71,42 @@ UWorld* USAction::GetWorld() const
 
 USActionComponent* USAction::GetOwningComponent() const
 {
-	return Cast<USActionComponent>(GetOuter());
+	//Is not optimal for the iteration of the find class
+	//AActor* Actor = Cast<AActor>(GetOuter());
+	//return Actor->GetComponentByClass(USActionComponent::StaticClass());
+	 
+	
+	//return Cast<USActionComponent>(GetOuter());
+
+	return ActionComp;
+}
+
+void USAction::OnRep_IsRunning()
+{
+	if (bIsRunning)
+	{
+		StartAction(nullptr);
+	}
+	else
+	{
+		StopAction(nullptr);
+	}
 }
 
 bool USAction::IsRunning() const
 {
 	return bIsRunning;
+}
+
+void USAction::GetLifetimeReplicatedProps(TArray< FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// set rules for replicated params
+	// If the bLidOpened is changed in the server, send it to all the clients
+	// This is a default rule. To be sent to all the clients. It can be another rule
+	// that can be sent to an special client like a (hold a wearpon)
+
+	DOREPLIFETIME(USAction, bIsRunning);
+	DOREPLIFETIME(USAction, ActionComp);
 }

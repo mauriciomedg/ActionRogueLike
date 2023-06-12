@@ -4,7 +4,8 @@
 #include "SActionComponent.h"
 #include "SAction.h"
 #include "../ActionRogueLike.h"
-
+#include "Net/UnrealNetwork.h"
+#include "Engine/ActorChannel.h"
 
 USActionComponent::USActionComponent()
 {
@@ -18,10 +19,15 @@ void USActionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	for(TSubclassOf<USAction> ActionClass : DefaultActions)
+	// We will do that in the server, thanks to the fact that unreal will clone the character and then, 
+	// DefaultActions will be copied
+	if (GetOwner()->HasAuthority())
 	{
-		//here we assume that the owner is already defined as the instigator because we are in the beginPlay
-		AddAction(GetOwner(), ActionClass);
+		for (TSubclassOf<USAction> ActionClass : DefaultActions)
+		{
+			//here we assume that the owner is already defined as the instigator because we are in the beginPlay
+			AddAction(GetOwner(), ActionClass);
+		}
 	}
 }
 
@@ -42,7 +48,7 @@ void USActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 			*GetNameSafe(GetOwner()),
 			*Action->ActionName.ToString(),
 			Action->IsRunning() ? TEXT("True") : TEXT("false"),
-			*GetNameSafe(GetOuter()));
+			*GetNameSafe(Action->GetOuter()));
 		
 		LogOnScreen(this, ActionMsg, TextColor, 0.0f);
 	}
@@ -55,10 +61,12 @@ void USActionComponent::AddAction(AActor* Instigator, TSubclassOf<USAction> Acti
 		return;
 	}
 
-	USAction* NewAction = NewObject<USAction>(this, ActionClass); // Outer is the owner of the object
+	USAction* NewAction = NewObject<USAction>(GetOwner(), ActionClass); // Outer is the owner of the object
 
 	if (ensure(NewAction))
 	{
+		NewAction->Initialize(this);
+
 		Actions.Add(NewAction);
 
 		if (NewAction->bAutoStart && ensure(NewAction->CanStart(Instigator)))
@@ -124,4 +132,32 @@ void USActionComponent::ServerStartAction_Implementation(AActor* Instigator, FNa
 {
 	StartActionByName(Instigator, ActionName);
 }
+
+void USActionComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// set rules for replicated params
+	// If the bLidOpened is changed in the server, send it to all the clients
+	// This is a default rule. To be sent to all the clients. It can be another rule
+	// that can be sent to an special client like a (hold a wearpon)
+
+	DOREPLIFETIME(USActionComponent, Actions);
+}
+
+bool USActionComponent::ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags)
+{
+	bool WroteSomething = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
+
+	for (USAction* Action : Actions)
+	{
+		if (Action)
+		{
+			WroteSomething |= Channel->ReplicateSubobject(Action, *Bunch, *RepFlags);
+		}
+	}
+
+	return WroteSomething;
+}
+
 
