@@ -58,36 +58,42 @@ bool USAttributeComponent::ApplyHealthChange(AActor* InstigatorActor, float Delt
 	}
 
 	float OldHealth = Health;
+	float NewHealth = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
+		
+	float ActualDelta = NewHealth - OldHealth;
 
-	Health = FMath::Clamp(Health + Delta, 0.0f, HealthMax);
+	// Is Server?
+	if (GetOwner()->HasAuthority())
+	{
+		Health = NewHealth;
 
-	float ActualDelta = Health - OldHealth;
+		if (ActualDelta != 0.0f)
+		{
+			// We can comment that becase if its called in the server, it will be called in its self and for the other clients. For the client side, this
+			// is call locally.
+			//OnHealthChange.Broadcast(InstigatorActor, this, Health, ActualDelta);
+			MulticastHealthChanged(InstigatorActor, Health, ActualDelta);
+		}
 
+		// Dead
+		if (ActualDelta < 0.0f && Health == 0.0f)
+		{
+			// Auth Authority, GameMode only exist in the sever.
+			ASGameModeBase* GM = GetWorld()->GetAuthGameMode<ASGameModeBase>();
+
+			if (GM)
+			{
+				GM->OnActorKilled(GetOwner(), InstigatorActor);
+			}
+		}
+
+	}
+	
 	if (ActualDelta < 0.0f)
 	{
 		ApplyRage(InstigatorActor, -ActualDelta);
 	}
-
-	if (ActualDelta != 0.0f)
-	{
-		// We can comment that becase if its called in the server, it will be called in its self and for the other clients. For the client side, this
-		// is call locally.
-		//OnHealthChange.Broadcast(InstigatorActor, this, Health, ActualDelta);
-		MulticastHealthChanged(InstigatorActor, Health, ActualDelta);
-	}
 	
-	// Dead
-	if (ActualDelta < 0.0f && Health == 0.0f)
-	{
-		// Auth Authority, GameMode only exist in the sever.
-		ASGameModeBase* GM = GetWorld()->GetAuthGameMode<ASGameModeBase>();
-
-		if (GM)
-		{
-			GM->OnActorKilled(GetOwner(), InstigatorActor);
-		}
-	}
-
 	return ActualDelta != 0.0f;
 }
 

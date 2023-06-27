@@ -44,11 +44,9 @@ void USActionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 	{
 		FColor TextColor = Action->IsRunning() ? FColor::Blue : FColor::White;
 
-		FString ActionMsg = FString::Printf(TEXT("[%s] Action: %s : IsRunning: %s : Outer: %s"),
+		FString ActionMsg = FString::Printf(TEXT("[%s] Action: %s"),
 			*GetNameSafe(GetOwner()),
-			*Action->ActionName.ToString(),
-			Action->IsRunning() ? TEXT("True") : TEXT("false"),
-			*GetNameSafe(Action->GetOuter()));
+			*GetNameSafe(Action));
 		
 		LogOnScreen(this, ActionMsg, TextColor, 0.0f);
 	}
@@ -86,6 +84,8 @@ void USActionComponent::RemoveAction(USAction* ActionToRemove)
 	Actions.Remove(ActionToRemove);
 }
 
+//In the client side we start the action, we don't wait to the server to tell us to run the action. (Thats avoid lag on the cosmetic effects to run)
+// Lecture 22. Code flow
 bool USActionComponent::StartActionByName(AActor* Instigator, FName ActionName)
 {
 	for (USAction* Action : Actions)

@@ -8,6 +8,23 @@
 #include "SAction.generated.h"
 
 class USActionComponent;
+
+//We add the prefix F because of Unreal
+USTRUCT()
+struct FActionRepData
+{
+	// we add the body because it is a class
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY()
+	bool bIsRunning;
+	
+	UPROPERTY() //If we dont want to replicate we pass UPROPERTY(NotReplicated) in the UPROPERTY
+	AActor* Instigator;
+};
+
 /**
  * 
  */
@@ -32,11 +49,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tags")
 	FGameplayTagContainer BlockedTags;
 
-	UPROPERTY(ReplicatedUsing = "OnRep_IsRunning")
-	bool bIsRunning = false;
+	UPROPERTY(ReplicatedUsing = "OnRep_RepData")
+	FActionRepData RepData;
+	//bool bIsRunning = false;
 
 	UFUNCTION()
-	void OnRep_IsRunning();
+	void OnRep_RepData();
 
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty>& OutLifetimeProps) const override;
 
