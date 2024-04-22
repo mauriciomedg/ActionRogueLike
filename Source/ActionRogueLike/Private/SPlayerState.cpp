@@ -3,6 +3,7 @@
 
 #include "SPlayerState.h"
 #include "SCharacter.h"
+#include "SSaveGame.h"
 
 void ASPlayerState::GrantCredits(int32 Credit)
 {
@@ -32,6 +33,11 @@ void ASPlayerState::OnRep_Score()
 	Credits = GetScore();
 }
 
+float ASPlayerState::GetCredits() const
+{
+	return GetScore();
+}
+
 ASPlayerState* ASPlayerState::GetSPlayerState(AActor* Player)
 {
 	ACharacter* Charact = Cast<ACharacter>(Player);
@@ -42,4 +48,21 @@ ASPlayerState* ASPlayerState::GetSPlayerState(AActor* Player)
 	}
 	
 	return nullptr;
+}
+
+void ASPlayerState::SavePlayerState_Implementation(USSaveGame* SaveObject)
+{
+	if (SaveObject)
+	{
+		SaveObject->Credits = GetScore();
+	}
+}
+
+void ASPlayerState::LoadPlayerState_Implementation(USSaveGame* SaveObject)
+{
+	if (SaveObject)
+	{
+		SetScore(SaveObject->Credits);
+		//Credits = SaveObject->Credits;
+	}
 }

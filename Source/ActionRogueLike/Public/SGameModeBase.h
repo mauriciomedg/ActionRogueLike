@@ -72,6 +72,9 @@ public:
 	//Game mode it is responsable to call the begin play on the all actor in the world
 	virtual void StartPlay() override;
 
+	//override from the GameModeBase class, because is a blueprint native event we add _Implementation
+	void HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer) override;
+
 	UFUNCTION(Exec)
 	void KillAll();
 

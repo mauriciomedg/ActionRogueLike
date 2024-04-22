@@ -12,6 +12,7 @@
 #include "SPlayerState.h"
 #include "SSaveGame.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/GameStateBase.h"
 
 // su. its to make the own category of console variables
 // ECVF_Cheat means that it is not include in the final build
@@ -38,6 +39,17 @@ void ASGameModeBase::StartPlay()
 
 	GetWorldTimerManager().SetTimer(TimerHandle_SpawnBot, this, &ASGameModeBase::SpawnBotTimerElapsed, SpawnTimerInterval, true);
 
+}
+
+void ASGameModeBase::HandleStartingNewPlayer_Implementation(APlayerController* NewPlayer)
+{
+	Super::HandleStartingNewPlayer_Implementation(NewPlayer);
+
+	ASPlayerState* PS = NewPlayer->GetPlayerState<ASPlayerState>();
+	if (PS)
+	{
+		PS->LoadPlayerState(CurrentSaveGame);
+	}
 }
 
 void ASGameModeBase::SpawnBotTimerElapsed()
@@ -216,6 +228,16 @@ void ASGameModeBase::OnHealthPotionPickUp()
 
 void ASGameModeBase::WriteSaveGame()
 {
+	for (int32 i = 0; i < GameState->PlayerArray.Num(); ++i)
+	{
+		ASPlayerState* PS = Cast<ASPlayerState>(GameState->PlayerArray[i]);
+		if (PS)
+		{
+			PS->SavePlayerState(CurrentSaveGame);
+			break; // single player only at this point
+		}
+	}
+
 	UGameplayStatics::SaveGameToSlot(CurrentSaveGame, SlotName, 0);
 }
 

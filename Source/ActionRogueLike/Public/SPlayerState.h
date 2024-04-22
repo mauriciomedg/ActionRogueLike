@@ -8,6 +8,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnCreditChanged, int32, NewCredit, bool, bGrant);
 
+class USSaveGame;
 /**
  * 
  */
@@ -25,6 +26,9 @@ public:
 
 	virtual void OnRep_Score() override;
 	
+	UFUNCTION(BlueprintCallable)
+	float GetCredits() const;
+
 	UFUNCTION()
 	void GrantCredits(int32 Credit);
 
@@ -36,4 +40,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	static ASPlayerState* GetSPlayerState(AActor* Player);
+
+	//BlueprintNativeEvent, allows extends the function in blueprint
+	UFUNCTION(BlueprintNativeEvent)
+	void SavePlayerState(USSaveGame* SaveObject);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void LoadPlayerState(USSaveGame* SaveObject);
+
 };
