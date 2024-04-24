@@ -21,6 +21,7 @@ public:
 	float TargetPitch = 110.0f;
 
 	void Interact_Implementation(APawn* InstigatorPawn);
+	void OnActorLoaded_Implementation();
 
 	// Sets default values for this actor's properties
 	ASItemChest();
@@ -28,7 +29,7 @@ public:
 protected:
 
 	//
-	UPROPERTY(ReplicatedUsing = "OnRep_LidOpened", BlueprintReadOnly) // ReplicatedUsing == RepNotif Knowing in doc and blueprint
+	UPROPERTY(ReplicatedUsing = "OnRep_LidOpened", BlueprintReadOnly, SaveGame) // ReplicatedUsing == RepNotif Knowing in doc and blueprint
 	bool bLidOpened;
 
 	UFUNCTION()

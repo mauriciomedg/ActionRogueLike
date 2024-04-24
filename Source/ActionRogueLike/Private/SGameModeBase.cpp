@@ -14,6 +14,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/GameStateBase.h"
 #include "SGameplayInterface.h"
+#include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 
 // su. its to make the own category of console variables
 // ECVF_Cheat means that it is not include in the final build
@@ -255,6 +256,14 @@ void ASGameModeBase::WriteSaveGame()
 		ActorData.ActorName = Actor->GetName();
 		ActorData.Tranform = Actor->GetTransform();
 
+		// Pass the array to fill with data from Actor
+		FMemoryWriter MemWriter(ActorData.ByteData);
+		FObjectAndNameAsStringProxyArchive Ar(MemWriter, true);
+		// Find only variables with UPROPERTY(SaveGame)
+		Ar.ArIsSaveGame = true;
+		// Convert into binary array
+		Actor->Serialize(Ar);
+
 		CurrentSaveGame->SavedActors.Add(ActorData);
 	}
 
@@ -290,6 +299,15 @@ void ASGameModeBase::LoadSaveGame()
 				if (ActorData.ActorName == Actor->GetName())
 				{
 					Actor->SetActorTransform(ActorData.Tranform);
+
+					FMemoryReader MemReader(ActorData.ByteData);
+					FObjectAndNameAsStringProxyArchive Ar(MemReader, true);
+					
+					Ar.ArIsSaveGame = true;
+					// Convert into Actors variables
+					Actor->Serialize(Ar);
+
+					ISGameplayInterface::Execute_OnActorLoaded(Actor);
 					break;
 				}
 			}

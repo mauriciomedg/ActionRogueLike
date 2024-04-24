@@ -19,6 +19,9 @@ public:
 
 	UPROPERTY()
 	FTransform Tranform;
+
+	UPROPERTY()
+	TArray<uint8> ByteData;
 };
 /**
  * 
