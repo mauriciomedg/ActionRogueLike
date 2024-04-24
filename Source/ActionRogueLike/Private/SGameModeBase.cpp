@@ -13,6 +13,7 @@
 #include "SSaveGame.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/GameStateBase.h"
+#include "SGameplayInterface.h"
 
 // su. its to make the own category of console variables
 // ECVF_Cheat means that it is not include in the final build
@@ -238,6 +239,25 @@ void ASGameModeBase::WriteSaveGame()
 		}
 	}
 
+	CurrentSaveGame->SavedActors.Empty();
+
+	for (FActorIterator It(GetWorld()); It; ++It)
+	{
+		AActor* Actor = *It;
+
+		// Only interestedt in those that implement the game play interface
+		if (!Actor->Implements<USGameplayInterface>())
+		{
+			continue;
+		}
+
+		FActorSaveData ActorData;
+		ActorData.ActorName = Actor->GetName();
+		ActorData.Tranform = Actor->GetTransform();
+
+		CurrentSaveGame->SavedActors.Add(ActorData);
+	}
+
 	UGameplayStatics::SaveGameToSlot(CurrentSaveGame, SlotName, 0);
 }
 
@@ -254,6 +274,26 @@ void ASGameModeBase::LoadSaveGame()
 		}
 
 		UE_LOG(LogTemp, Log, TEXT("Loaded SaveGame Data"));
+
+		for (FActorIterator It(GetWorld()); It; ++It)
+		{
+			AActor* Actor = *It;
+
+			// Only interestedt in those that implement the game play interface
+			if (!Actor->Implements<USGameplayInterface>())
+			{
+				continue;
+			}
+
+			for (FActorSaveData ActorData : CurrentSaveGame->SavedActors)
+			{
+				if (ActorData.ActorName == Actor->GetName())
+				{
+					Actor->SetActorTransform(ActorData.Tranform);
+					break;
+				}
+			}
+		}
 	}
 	else
 	{
