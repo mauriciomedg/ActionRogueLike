@@ -62,7 +62,9 @@ void ASPlayerState::LoadPlayerState_Implementation(USSaveGame* SaveObject)
 {
 	if (SaveObject)
 	{
-		SetScore(SaveObject->Credits);
+		GrantCredits(SaveObject->Credits);
+
+		//SetScore(SaveObject->Credits);
 		//Credits = SaveObject->Credits;
 	}
 }
