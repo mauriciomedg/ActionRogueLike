@@ -31,8 +31,7 @@ public:
 	}
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	USMonsterData* MonsterData;
-	//TSubclassOf<AActor> MonsterClass;
+	FPrimaryAssetId MonsterId;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float Weight;
@@ -61,9 +60,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	UDataTable* MonsterTable;
 
-	//UPROPERTY(EditDefaultsOnly, Category = "AI")
-	//TSubclassOf<AActor> MinionClass;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Item")
 	TSubclassOf<AActor> HealthPotionClass;
 
@@ -86,6 +82,8 @@ protected:
 
 	UFUNCTION()
 	void OnQueryCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);
+
+	void OnMonsterLoaded(FPrimaryAssetId LoadedId, FVector SpawnLocation);
 
 	UFUNCTION()
 	void OnQueryHealthPotionCompleted(UEnvQueryInstanceBlueprintWrapper* QueryInstance, EEnvQueryStatus::Type QueryStatus);

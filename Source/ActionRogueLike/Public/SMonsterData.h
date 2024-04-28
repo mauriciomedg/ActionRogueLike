@@ -27,4 +27,11 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
 	UTexture2D* Icon;
+
+	virtual FPrimaryAssetId GetPrimaryAssetId() const override
+	{
+		// GetFName() the name given in the content browser.
+		return FPrimaryAssetId("Monsters", GetFName());
+	}
+
 };
