@@ -8,7 +8,7 @@
 
 class UAnimMontage;
 class UParticleSystem;
-
+class UCameraShakeBase;
 /**
  * 
  */
@@ -33,6 +33,15 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	UParticleSystem* CastingEffect;
+
+	UPROPERTY(EditAnywhere, Category = "Effect")
+	TSubclassOf<class UCameraShakeBase> ShakeCamera;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effect")
+	float InnerRadiusCameraShake = 1.0;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effect")
+	float OuterRadiusCameraShake = 2.0;
 
 	UFUNCTION()
 	void AttackDelay_Elapsed(ACharacter* InstigatorCharacter);

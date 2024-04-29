@@ -22,7 +22,13 @@ void USAction_ProjectileAttack::StartAction_Implementation(AActor* Instigator)
 	{
 		Character->PlayAnimMontage(AttackAnim);
 		UGameplayStatics::SpawnEmitterAttached(CastingEffect, Character->GetMesh(), HandSocketName, FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::SnapToTarget);
-
+		
+		if (ensureAlways(ShakeCamera))
+		{
+			FVector Epicenter = Character->GetPawnViewLocation();
+			UGameplayStatics::PlayWorldCameraShake(Character, ShakeCamera, Epicenter, InnerRadiusCameraShake, OuterRadiusCameraShake);
+		}
+		
 		if (Character->HasAuthority())
 		{
 			FTimerHandle TimerHandle_AttackDelay;
