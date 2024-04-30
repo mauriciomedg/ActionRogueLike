@@ -79,6 +79,16 @@ void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 				ActionComp->AddAction(GetInstigator(), BurningActionClass);
 			}
 		}
+
+		APawn* InstigatorPawn = Cast<APawn>(OtherActor);
+		if (InstigatorPawn)
+		{
+			APlayerController* PC = Cast<APlayerController>(InstigatorPawn->GetController());
+			if (PC && PC->IsLocalController())
+			{
+				PC->ClientStartCameraShake(ImpactShake);
+			}
+		}
 	}
 }
 

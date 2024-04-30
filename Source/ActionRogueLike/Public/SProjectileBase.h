@@ -24,6 +24,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Effect")
 	UParticleSystem* ImpactVFX;
 
+	UPROPERTY(EditAnywhere, Category = "Effect")
+	TSubclassOf<class UCameraShakeBase> ImpactShake;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component")
 	USphereComponent* SphereComp;
 
